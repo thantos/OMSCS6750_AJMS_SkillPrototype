@@ -1,0 +1,15 @@
+{
+  "type": "simple",
+  "rounds": ["Welcome to the OMSCS combat prototype. I have been tasked with clearing out a remote Antarctic facility of nasty robots. Really this is a good news bad new situation. Good news, I am a full armed combat bot designed for combat! Bad news, I don't really have a mind for combat, ohh, and we have no video feed. Well, I'll be the well equipped eyes and you be my brain. Lets practice on this malfunctioning worker drone. It is about 5 paces away. Say fire and I'll fire at the drone.",
+              "It noticed us. I think it is mad, quick, fire again!",
+              "Miss. It stumbled towards us. 4 paces way.",
+              "Hit! It keeps coming. 3 paces away.",
+              "Hit! It's a goner now, one more shot!",
+              "Bam! It exploded! Good thing you stopped it before it got too close, who knows what it would have done. Thats all I have for now. Thanks for playing."],
+  "expectedIntents": ["fireIntent"],
+  "defaults" : {
+    "reprompt": "just say fire",
+    "onMissedIntent": "just say fire"
+  },
+  "cardTitle": "Tutorial"
+}
