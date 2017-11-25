@@ -17,7 +17,8 @@ def initialize(game_state):
     game_state[OPPONENTHISTORY] = []
     game_state[OPPONENTBONUS] = ''
 
-    game_state[ANNOUNCEPrompt] = ANNOUNCEIntro
+    game_state[ANNOUNCE] = ANNOUNCEIntro
+    game_state[TOPICS] = [[],[]]
 
     # each round is a random length of turns ~ 6 on average
     game_state[TURNS] = map(int, np.random.normal(6, 1.25, game_state[NUMROUNDS]))
@@ -33,11 +34,14 @@ def update(game_state_prev):
     if PLAYERHP not in game_state_prev:
         return initialize(game_state_prev)
 
-    game_state = resolve_turn(game_state_prev)
+    # copy the game state
+    game_state = dict(game_state_prev)
+
+    game_state = resolve_turn(game_state)
 
     game_state = announcer.prompt(game_state)
 
-    # game_state = announcer_topics(game_state_prev, game_state)
+    game_state = announcer.topics(game_state_prev, game_state)
 
     return game_state
 

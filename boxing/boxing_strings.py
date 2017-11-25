@@ -1,21 +1,24 @@
 NUMROUNDS = 'number rounds'
 
-ANNOUNCEPrompt = 'prompt'
+ANNOUNCE = 'announce'
 ANNOUNCEIntro = 'intro'
 ANNOUNCEMidround = 'mid round'
 ANNOUNCEBetweenRound = 'between round'
 ANNOUNCEGameOver = 'game over'
 
-TOPIC = 'topic'
+TOPICS = 'topics'
+TOPICHealthgood = 'health good'
 TOPICHealthok = 'health ok'
 TOPICHealthlow = 'health low'
-TOPICTired = 'tired'
-TOPICExhausted = 'exhausted'
+TOPICStaminagood = 'stamina good'
+TOPICStaminaok = 'stamina ok'
+TOPICStaminalow = 'stamina low'
 TOPICBighit = 'bighit'
 TOPICMiss = 'miss'
 TOPICBoring = 'boring'
 TOPICShowboat = 'showboat'
 TOPICHardtohit = 'hard to hit'
+# bonus hits should have their own topic - Haymaker etc, bolo punch, rope-a-dope
 
 PLAYERHP = 'player hp'
 PLAYERSTAMINA = 'player stamina'

@@ -87,35 +87,3 @@ class TestMoves(TestCase):
 
             gs = update(gs)
             self.assertEqual(gs[PLAYERBONUS], ADdisadvantage)
-
-    # round transitions etc
-    def test_alexa_prompts(self):
-        gs = initialize({PLAYERMOVE: MOVEtaunt})
-        gs[OPPONENTMOVE] = MOVEtaunt
-        gs[TURNS] = [3, 3]
-        gs[NUMROUNDS] = 2
-
-        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEIntro)
-
-        for i in range(2):
-            gs = update(gs)
-            self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEMidround)
-
-        gs = update(gs)
-        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEBetweenRound)
-
-        for i in range(2):
-            gs = update(gs)
-            self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEMidround)
-
-        gs = update(gs)
-        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEGameOver)
-
-    def test_game_over(self):
-        gs = initialize({PLAYERMOVE: MOVEuppercut})
-        gs[PLAYERBONUS] = ADsuper
-        gs[OPPONENTMOVE] = MOVEtaunt
-        gs[OPPONENTHP] = 1
-        gs = update(gs)
-        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEGameOver)
-
