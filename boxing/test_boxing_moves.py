@@ -95,21 +95,21 @@ class TestMoves(TestCase):
         gs[TURNS] = [3, 3]
         gs[NUMROUNDS] = 2
 
-        self.assertEqual(gs[ALEXAPROMPT], PROMPTIntro)
+        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEIntro)
 
         for i in range(2):
             gs = update(gs)
-            self.assertEqual(gs[ALEXAPROMPT], PROMPTMidround)
+            self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEMidround)
 
         gs = update(gs)
-        self.assertEqual(gs[ALEXAPROMPT], PROMPTBetweenRound)
+        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEBetweenRound)
 
         for i in range(2):
             gs = update(gs)
-            self.assertEqual(gs[ALEXAPROMPT], PROMPTMidround)
+            self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEMidround)
 
         gs = update(gs)
-        self.assertEqual(gs[ALEXAPROMPT], PROMPTGameOver)
+        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEGameOver)
 
     def test_game_over(self):
         gs = initialize({PLAYERMOVE: MOVEuppercut})
@@ -117,5 +117,5 @@ class TestMoves(TestCase):
         gs[OPPONENTMOVE] = MOVEtaunt
         gs[OPPONENTHP] = 1
         gs = update(gs)
-        self.assertEqual(gs[ALEXAPROMPT], PROMPTGameOver)
+        self.assertEqual(gs[ANNOUNCEPrompt], ANNOUNCEGameOver)
 
