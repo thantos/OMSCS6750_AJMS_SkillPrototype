@@ -108,3 +108,32 @@ def random_move():
              MOVEfeint, MOVEtaunt, MOVEwrapup, MOVEbob,
              MOVEfootwork, MOVEhandsup, MOVEprotect]
     return random.choice(moves)
+
+
+def bonus(game_state, player=True):
+    if player:
+        player_move, player_hit = game_state[PLAYERHISTORY][-1]
+        opp_move, opp_hit = game_state[OPPONENTHISTORY][-1]
+    else:
+        player_move, player_hit = game_state[OPPONENTHISTORY][-1]
+        opp_move, opp_hit = game_state[PLAYERHISTORY][-1]
+
+    if MOVEuppercut in player_move:
+        return ADdisadvantage
+
+    if MOVEhook in player_move:
+        return ADNobonus
+
+    if MOVEcross in player_move:
+        return ADNobonus
+
+    if MOVEjab in player_move:
+        return ADNobonus
+
+    if opp_hit:
+        return ADNobonus
+
+    if MOVEtaunt in player_move:
+        return ADsuper
+
+    return ADadvantage

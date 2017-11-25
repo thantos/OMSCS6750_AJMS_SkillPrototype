@@ -1,4 +1,5 @@
 MAX_ROUNDS = 3
+
 PLAYERHP = 'player hp'
 PLAYERSTAMINA = 'player stamina'
 OPPONENTHP = 'opponent hp'
@@ -31,5 +32,4 @@ ADadvantage = 'adv'
 ADdisadvantage = 'dis'
 ADsuper = 'super'
 ADexhausted = 'exhausted'
-hp = 'hp'
-stamina = 'stamina'
+ADNobonus = 'no bonus'

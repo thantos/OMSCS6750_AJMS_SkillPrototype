@@ -26,17 +26,20 @@ def update(game_state):
 
 
 def resolve_turn(game_state):
-    opp_move = boxer.random_move()
-    game_state[OPPONENTMOVE] = opp_move
+    # calculate the effect of each action
+    phit, player_cost, damage_from_player = boxer.hit(game_state, player=True)
+    ohit, opp_cost, damage_from_player = boxer.hit(game_state, player=False)
 
-    phit, pp, po = boxer.hit(game_state, player=True)
-    ohit, oo, op = boxer.hit(game_state, player=False)
-
-    game_state[PLAYERHP] += pp[0] + op[0]
-    game_state[PLAYERSTAMINA] += pp[1] + op[1]
-
-    game_state[OPPONENTHP] += oo[0] + po[0]
-    game_state[OPPONENTSTAMINA] += oo[1] + po[1]
+    # apply the result of each action
+    game_state[PLAYERHP] += player_cost[0] + damage_from_player[0]
+    game_state[PLAYERSTAMINA] += player_cost[1] + damage_from_player[1]
+    game_state[OPPONENTHP] += opp_cost[0] + damage_from_player[0]
+    game_state[OPPONENTSTAMINA] += opp_cost[1] + damage_from_player[1]
     game_state[PLAYERHISTORY] += [(game_state[PLAYERMOVE], phit)]
     game_state[OPPONENTHISTORY] += [(game_state[OPPONENTMOVE], ohit)]
+
+    # check for bonuses
+    game_state[PLAYERBONUS] = boxer.bonus(game_state, player=True)
+    game_state[OPPONENTBONUS] = boxer.bonus(game_state, player=False)
+
     return game_state
