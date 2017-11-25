@@ -69,12 +69,16 @@
 
 ### Fire Suppression (FS)
 * Base Value: 1
+
 ### Station Fire Chance (SFC)
 * Base Value: ?
+
 ### Station Damage Chance (SDC)
 * Base Value: ?
+
 ### Life Support Decay (LSD)
 * Base Value: ?
+
 ### Base Warp Level (BWL)
 * Base Value: > 0
 
@@ -204,4 +208,4 @@ Life support keeps the crew alive. Even when life support is damaged, the ship c
 Ship can try to escape battle when damaged or uninterested in combat. First they must change their W (Warp) to the BWL (base warp level). After that they can warp, unless the enemy has some level of (I) intercept, generally from a tractor beam. To escape, W must be greater than the sum of the base warp level and the enemy's intercept (BWL + eI).
 
 #### Logic
-* Escape = B > (BWL + eI) 
+* Escape = B > (BWL + eI)
