@@ -1,5 +1,5 @@
-import random
 import boxer
+import announcer
 import numpy as np
 from boxing_strings import *
 
@@ -17,7 +17,8 @@ def initialize(game_state):
     game_state[OPPONENTHISTORY] = []
     game_state[OPPONENTBONUS] = ''
 
-    game_state[ALEXAPROMPT] = PROMPTIntro
+    game_state[ANNOUNCE] = ANNOUNCEIntro
+    game_state[TOPICS] = [[],[]]
 
     # each round is a random length of turns ~ 6 on average
     game_state[TURNS] = map(int, np.random.normal(6, 1.25, game_state[NUMROUNDS]))
@@ -27,15 +28,20 @@ def initialize(game_state):
     return game_state
 
 
-def update(game_state):
+def update(game_state_prev):
     # the first time through we won't have any game state
     # initialize and return the game
-    if PLAYERHP not in game_state:
-        return initialize(game_state)
+    if PLAYERHP not in game_state_prev:
+        return initialize(game_state_prev)
+
+    # copy the game state
+    game_state = dict(game_state_prev)
 
     game_state = resolve_turn(game_state)
 
-    game_state = alexa_prompt(game_state)
+    game_state = announcer.prompt(game_state)
+
+    game_state = announcer.topics(game_state_prev, game_state)
 
     return game_state
 
@@ -59,46 +65,3 @@ def resolve_turn(game_state):
     game_state[OPPONENTBONUS] = boxer.bonus(game_state, player=False)
 
     return game_state
-
-
-def alexa_prompt(game_state):
-    prompt = PROMPTMidround
-    if game_over(game_state):
-        prompt = PROMPTGameOver
-    elif round_over(game_state):
-        prompt = PROMPTBetweenRound
-        game_state[CURRENTTURN] = 1
-        game_state[CURRENTROUND] += 1
-    else:
-        game_state[CURRENTTURN] += 1
-
-    game_state[ALEXAPROMPT] = prompt
-
-    return game_state
-
-
-def game_over(game_state):
-    if game_state[PLAYERHP] <= 0:
-        return True
-    if game_state[OPPONENTHP] <= 0:
-        return True
-
-    round = game_state[CURRENTROUND]
-    n_rounds = game_state[NUMROUNDS]
-    if round == n_rounds:
-
-        turn = game_state[CURRENTTURN]
-        turns_in_final_round = game_state[TURNS][n_rounds-1]
-        if turn == turns_in_final_round:
-            return True
-
-    return False
-
-
-def round_over(game_state):
-    round = game_state[CURRENTROUND]
-
-    turn = game_state[CURRENTTURN]
-    turns_in_round = game_state[TURNS][round-1]
-
-    return turn == turns_in_round
