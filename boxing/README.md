@@ -1,9 +1,11 @@
 # Alexa Boxing Coach (needs name)
 
-##TODO
-* add prompt topics (player life, player stamina (goes down < hit + low stamina))
+## TODO
 * Add Alexa Phrases system
+* add knock out / knock down topics
 * Add combos
+* Add random automated player choices
+
 
 
 ![](https://snescentral.com/0/9/1/0913/screen03.png)
