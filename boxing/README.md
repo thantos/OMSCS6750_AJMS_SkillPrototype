@@ -1,5 +1,10 @@
 # Alexa Boxing Coach (needs name)
 
+##TODO
+* add prompt topics (player life, player stamina (goes down < hit + low stamina))
+* Add Alexa Phrases system
+* Add combos
+
 
 ![](https://snescentral.com/0/9/1/0913/screen03.png)
 
@@ -44,3 +49,15 @@ The coach can call out one of a set number of 'moves' for the boxer. These are b
 ### Special Moves
 Certain combos and add temporary bonus stats for players 
 Certain punches are only possible when successfully executing combos
+
+
+### Hit Mechanics
+To determine if a punch successfully lands we roll a 20 sided die and compare that rolled value to a threshold value. If the roll is higher the punch lands. A player can have a bonus state that impacts the probability of landing a punch. Currently there are 4 bonus states 
+
+#### Bonuses
+* Advantage - roll two 20 sided die keep the higher value 
+* Disadvantage - roll two 20 sided die keep the lower value 
+* Super - always hit
+* Exhausted - always miss
+
+
