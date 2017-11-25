@@ -1,4 +1,11 @@
-MAX_ROUNDS = 3
+NUMROUNDS = 'number rounds'
+
+ALEXAPROMPT = 'prompt'
+PROMPTIntro = 'intro'
+PROMPTMidround = 'mid round'
+PROMPTBetweenRound = 'between round'
+PROMPTGameOver = 'game over'
+
 PLAYERHP = 'player hp'
 PLAYERSTAMINA = 'player stamina'
 OPPONENTHP = 'opponent hp'
@@ -31,5 +38,4 @@ ADadvantage = 'adv'
 ADdisadvantage = 'dis'
 ADsuper = 'super'
 ADexhausted = 'exhausted'
-hp = 'hp'
-stamina = 'stamina'
+ADNobonus = 'no bonus'
