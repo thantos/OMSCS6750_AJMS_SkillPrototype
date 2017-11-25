@@ -17,7 +17,7 @@ def initialize(game_state):
     game_state[OPPONENTHISTORY] = []
     game_state[OPPONENTBONUS] = ''
 
-    game_state[ALEXAPROMPT] = PROMPTIntro
+    game_state[ANNOUNCEPrompt] = ANNOUNCEIntro
 
     # each round is a random length of turns ~ 6 on average
     game_state[TURNS] = map(int, np.random.normal(6, 1.25, game_state[NUMROUNDS]))
@@ -27,15 +27,17 @@ def initialize(game_state):
     return game_state
 
 
-def update(game_state):
+def update(game_state_prev):
     # the first time through we won't have any game state
     # initialize and return the game
-    if PLAYERHP not in game_state:
-        return initialize(game_state)
+    if PLAYERHP not in game_state_prev:
+        return initialize(game_state_prev)
 
-    game_state = resolve_turn(game_state)
+    game_state = resolve_turn(game_state_prev)
 
-    game_state = alexa_prompt(game_state)
+    game_state = announcer_prompt(game_state)
+
+    # game_state = announcer_topics(game_state_prev, game_state)
 
     return game_state
 
@@ -61,20 +63,25 @@ def resolve_turn(game_state):
     return game_state
 
 
-def alexa_prompt(game_state):
-    prompt = PROMPTMidround
+def announcer_prompt(game_state):
+    prompt = ANNOUNCEMidround
     if game_over(game_state):
-        prompt = PROMPTGameOver
+        prompt = ANNOUNCEGameOver
     elif round_over(game_state):
-        prompt = PROMPTBetweenRound
+        prompt = ANNOUNCEBetweenRound
         game_state[CURRENTTURN] = 1
         game_state[CURRENTROUND] += 1
     else:
         game_state[CURRENTTURN] += 1
 
-    game_state[ALEXAPROMPT] = prompt
+    game_state[ANNOUNCEPrompt] = prompt
 
     return game_state
+
+def announcer_topics(game_state_prev, game_state):
+    pass
+
+
 
 
 def game_over(game_state):
