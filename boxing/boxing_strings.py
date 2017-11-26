@@ -20,6 +20,8 @@ TOPICShowboat = 'showboat'
 TOPICHardtohit = 'hard to hit'
 # bonus hits should have their own topic - Haymaker etc, bolo punch, rope-a-dope
 
+PLAYERNAME = 'player name'
+OPPONENTNAME = 'opp name'
 PLAYERHP = 'player hp'
 PLAYERSTAMINA = 'player stamina'
 OPPONENTHP = 'opponent hp'

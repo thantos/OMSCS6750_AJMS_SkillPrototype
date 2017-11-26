@@ -11,11 +11,13 @@ def initialize(game_state):
     game_state[PLAYERSTAMINA] = 10
     game_state[PLAYERHISTORY] = []
     game_state[PLAYERBONUS] = ''
+    game_state[PLAYERNAME] = 'George Washington'
 
     game_state[OPPONENTHP] = 20
     game_state[OPPONENTSTAMINA] = 10
     game_state[OPPONENTHISTORY] = []
     game_state[OPPONENTBONUS] = ''
+    game_state[OPPONENTNAME] = 'Abraham Lincoln'
 
     game_state[ANNOUNCE] = ANNOUNCEIntro
     game_state[TOPICS] = [[],[]]
