@@ -3,6 +3,7 @@ from unittest import TestCase
 from match import *
 from boxing_strings import *
 from modifiers import *
+from boxer import *
 from phrase_builder import *
 
 
@@ -21,9 +22,31 @@ class TestMoves(TestCase):
 
     def test_alexa_midround(self):
         gs = initialize({PLAYERMOVE: MOVEtaunt})
+        gs[PLAYERBONUS] = ADsuper
         gs[OPPONENTMOVE] = MOVEhandsup
+
         gs = update(gs)
 
         phrase = build(gs)
-        expected = build_midround(gs)
-        self.assertEqual(phrase, expected)
+        self.assertTrue(phrase)
+
+    def test_alexa_midround(self):
+        gs = initialize({PLAYERMOVE: MOVEuppercut})
+        gs[OPPONENTMOVE] = MOVEuppercut
+        gs[PLAYERBONUS] = ADsuper
+
+        for i in range(500):
+            gs[OPPONENTMOVE] = random_move()
+            gs[PLAYERMOVE] = random_move()
+            gs = update(gs)
+
+            phrase = build(gs)
+            print gs[CURRENTTURN], gs[CURRENTROUND], phrase
+            # run this a bunch with random moves and find all the mistackes
+            # A big Lincoln from George will likely send uppercut to the <say-as interpret-as='spell-out'>CTE</say-as> protocol tomorrow.  George just laid down the law on Lincoln with a big uppercut. Lincoln misses with a uppercut. George is starting to slow down a big. Lincoln is taking quite a few hits. Lincoln is starting to slow down a big.
+
+            # add did_hit to the topics -> duh
+            if gs[ANNOUNCE] == ANNOUNCEGameOver:
+                break
+
+
