@@ -1,22 +1,26 @@
 """Test the station module."""
 from unittest import TestCase
-from stations import Cockpit, AutoTurret, Shields, LifeSupport
+from stations import Cockpit, AutoTurret, Shields, LifeSupport, STATIONS
 from qp import STATS
 
 
 class BaseStationTests(object):
     """Test all base stations."""
 
-    def __init__(self, stat, base, boost, generator):
+    def __init__(self, stat, base, boost, type):
         """Construct Base Station Base Test Cases."""
         self.__stat = stat
         self.__base = base
         self.__boost = boost
-        self.__gen = generator
+        self.__type = type
 
     def setUp(self):
         """Setup."""
-        self.undertest = self.__gen()
+        self.undertest = self.__type()
+
+    def test_should_exist_in_stations_constant(self):
+        """The station should boost the expected stat."""
+        self.assertIsInstance(STATIONS[self.__type.__name__], self.__type)
 
     def test_should_return_stat(self):
         """The station should boost the expected stat."""
@@ -35,7 +39,7 @@ class BaseStationTests(object):
     def test_should_return_boosted_value(self):
         """A boosted station should apply the boost value."""
         self.assertDictContainsSubset(
-            {self.__stat: self.__base * self.__boost},
+            {self.__stat: self.__base + self.__base * self.__boost},
             self.undertest.handle(True))
 
     def test_should_return_non_0_boosted_value(self):
@@ -56,7 +60,7 @@ class AutoTurretTests(BaseStationTests, TestCase):
         """Pass in AutoTurret values."""
         super(AutoTurretTests, self).__init__(
             STATS.ATTACK_POWER, AutoTurret.BASE_VALUE, AutoTurret.BOOST_MOD,
-            lambda: AutoTurret()
+            AutoTurret
         )
         TestCase.__init__(self, *args, **kwargs)
 
@@ -67,8 +71,7 @@ class CockpitTests(BaseStationTests, TestCase):
     def __init__(self, *args, **kwargs):
         """Pass in Cockpit values."""
         super(CockpitTests, self).__init__(
-            STATS.DODGE, Cockpit.BASE_VALUE, Cockpit.BOOST_MOD,
-            lambda: Cockpit()
+            STATS.DODGE, Cockpit.BASE_VALUE, Cockpit.BOOST_MOD, Cockpit
         )
         TestCase.__init__(self, *args, **kwargs)
 
@@ -80,7 +83,7 @@ class LifeSupportTests(BaseStationTests, TestCase):
         """Pass in Cockpit values."""
         super(LifeSupportTests, self).__init__(
             STATS.LIFE_SUPPORT, LifeSupport.BASE_VALUE, LifeSupport.BOOST_MOD,
-            lambda: LifeSupport()
+            LifeSupport
         )
         TestCase.__init__(self, *args, **kwargs)
 
@@ -91,7 +94,6 @@ class ShieldsTests(BaseStationTests, TestCase):
     def __init__(self, *args, **kwargs):
         """Pass in Cockpit values."""
         super(ShieldsTests, self).__init__(
-            STATS.SHIELD, Shields.BASE_VALUE, Shields.BOOST_MOD,
-            lambda: Shields()
+            STATS.SHIELD, Shields.BASE_VALUE, Shields.BOOST_MOD, Shields
         )
         TestCase.__init__(self, *args, **kwargs)

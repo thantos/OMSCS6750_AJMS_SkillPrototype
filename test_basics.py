@@ -1,7 +1,7 @@
 from unittest import TestCase
 from lambda_function import *
 import json
-
+import os.path
 
 def response_text(response):
     return response['response']['outputSpeech']['text']
@@ -10,7 +10,10 @@ def response_text(response):
 class TestBasics(TestCase):
     def setUp(self):
         self.scene_name = 'tutorial'
-        self.json = json.load(open('scenes/tutorial.json'))
+        # https://stackoverflow.com/questions/40416072/reading-file-using-relative-path-in-python-project/40416154#40416154
+        my_path = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(my_path, "scenes/tutorial.json")
+        self.json = json.load(open(path))
         self.fire_intent = {'name': 'fireIntent'}
 
     def test_fire_five_times(self):

@@ -2,6 +2,8 @@
 
 
 class STATS(object):
+    """Stats used by QP."""
+
     ATTACK_POWER = "Attack Power"
     ACCURACY = "Accuracy"
     DODGE = "Dodge"
@@ -12,12 +14,37 @@ class STATS(object):
     LS_CHARGE = "Life Support Charge"
     MAX_LS = "Max Life Support"
     HULL_HEALTH = "Hull Health"
-    MAX_HULL_HEALTH = "Hull Health"
+    MAX_HULL_HEALTH = "MAX Hull Health"
 
 
 class STAT_CONSTANTS(object):
-    FIRE_SUPPRESSION = 1
+    """Constants used by QP."""
+
+    FIRE_SUPPRESSION = 2
     STATION_FIRE_CHANCE = None  # TODO
     STATION_DAMAGE_CHANCE = None  # TODO
-    LIFE_SUPPORT_DECAY = None  # TODO
+    LIFE_SUPPORT_DECAY = None  # TODO <0
     BASE_WAP_LEVEL = None  # TODO >0
+
+
+"""Stat values used by all players."""
+BASE_STATS = {
+    STATS.MAX_HULL_HEALTH: 10,  # TODO
+    STATS.MAX_LS: 10  # TODO
+}
+
+
+class EndGameState(object):
+    """Object representing a end game senerio."""
+
+    def __init__(self, player_loss):
+        """Build end game state."""
+        self.player_loss = player_loss
+
+
+class END_GAME_STATES(object):
+    """Collection of possible ways to end combat."""
+
+    PLAYER_HULL_DESTROYED = EndGameState(True)
+    PLAYER_LIFE_SUPPORT_LOSS = EndGameState(True)
+    OPPONENT_HULL_DESTROYED = EndGameState(False)

@@ -25,7 +25,8 @@ class Ship(object):
                 StationState. Required.
     stats    -- Dict[String, Integer], Dict of stat to value.
                 Should be persistant and base values, like hull health
-    crew     -- CrewMemeberState, A list of crew members. Required.
+    crew     -- Dict[String, CrewMemeberState],
+                A map of crew member names to CrewMemeberState. Required.
     """
 
     def __init__(self, stations, crew, stats={}):
@@ -45,7 +46,7 @@ class StationState(object):
     but that will be stored in the crew state.
     """
 
-    def __init__(self, fire=0, damanged=False):
+    def __init__(self, fire=0, damaged=False):
         """Build Station State.
 
         fire    -- Integer, Number of turns the has been present.
@@ -54,7 +55,7 @@ class StationState(object):
                    Default is False.
         """
         self.fire = fire
-        self.damaged = damanged
+        self.damaged = damaged
 
 
 class CrewMemberState(object):

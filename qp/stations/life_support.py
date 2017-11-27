@@ -11,7 +11,7 @@ class LifeSupport(BaseStation):
     Damaged: Provides nothing. (LS will decrease by LSD)
     """
 
-    BASE_VALUE = 0  # TODO
+    BASE_VALUE = 1  # TODO
     BOOST_MOD = 1  # TODO
 
     def __init__(self):

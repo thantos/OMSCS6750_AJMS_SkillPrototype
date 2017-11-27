@@ -8,7 +8,8 @@
   * Chance to hit
   * Station: Targeting Computer
   * Base Value: >0
-  * Range: ?
+  * Range: 0 > x
+  * Explanation: a value of 1 is 100% chance to hit enemy with no dodge See Logic section for more info.
 * Attack Power (P)
   * Damage which is done.
   * Station: Auto Turret
@@ -18,7 +19,8 @@
   * Ability to avoid enemy fire
   * Station: Cockpit
   * Base Value: 0
-  * Range: ?
+  * Range: 0 >= x
+  * Explanation: a value of 1 is 100% chance to dodge an enemy attack with accuracy < 1. See Logic section for more info.
 * Shield (S)
   * Absorbs damage
   * Station: Shield
@@ -168,6 +170,8 @@ Go back to the start where we report the current state.
 
 ### Combat
 Each round ends with combat between the two ships.
+
+Hit chance will be calculated between 0 and 1. If the different between accuracy and dodge (A-eD) is greater or equal to 1, there is a 100% chance to hit. If the different is less than 0, the chance is 0.
 
 #### Logic
 * if A > 0 and P > 0

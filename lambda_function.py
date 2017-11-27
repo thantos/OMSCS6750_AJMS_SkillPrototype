@@ -1,5 +1,6 @@
 from __future__ import print_function
 from json import loads
+import os
 
 
 # --------------- Helpers that build all of the responses ---------------------
@@ -68,7 +69,10 @@ def getSceneName(attributes):
 def loadSceneData(scene_name):
     if scene_name is not None:
         try:
-            with open("scenes/" + scene_name + ".json") as f:
+            # https://stackoverflow.com/questions/40416072/reading-file-using-relative-path-in-python-project/40416154#40416154
+            my_path = os.path.abspath(os.path.dirname(__file__))
+            path = os.path.join(my_path, "scenes/" + scene_name + ".json")
+            with open(path) as f:
                 return loads(f.read())
         finally:
             pass
