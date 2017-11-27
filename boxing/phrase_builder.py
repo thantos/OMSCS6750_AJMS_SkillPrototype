@@ -54,8 +54,11 @@ def build_midround(gs):
 
     all_topics = sorted_named_topics(gs)
     for topic, name1, name2 in all_topics:
+        phrase = ''
         if topic == TOPICShowboat:
             phrase = showboat_phrase(name1, name2)
+        if topic == TOPICBlocked:
+            phrase = blocked_phrase(name1, name2, gs)
         if topic == TOPICHit:
             phrase = hit_phrase(name1, name2, gs)
         if topic == TOPICHealthgood:
@@ -79,6 +82,8 @@ def build_midround(gs):
         if topic == TOPICHardtohit:
             phrase = hardtohit_phrase(name1, name2)
 
+        if not phrase:
+            phrase = notmuchhappening_phrase()
         midround.append(phrase)
     # IF THIS IS EMPTY DESCRIBE THE PUNCHES
     return ' '.join(midround)
@@ -341,6 +346,23 @@ def hardtohit_phrase(name1, name2):
     miss3 = '%s just keeps missing.' % (name1)
     miss4 = '%s is impossible to hit.' % (name2)
     return np.random.choice([miss1, miss2, miss3, miss4])
+
+def blocked_phrase(name1, name2, gs):
+    move = get_move_from_name(name1, gs)
+    block = get_move_from_name(name2, gs)
+    block1 = '%s telegraphed that %s. %s easily blocks it.' % (name1, move, name2)
+    block2 = '%s blocks a %s from %s.' % (name2, move, name1)
+    block3 = 'It will take more than that %s from %s.' % (move, name1)
+    block4 = "%s's %s defense is really good right now." % (name2, block)
+    block5 = '%s from %s.' % (block, name2)
+    return np.random.choice([block1, block2, block3, block4, block5])
+
+def notmuchhappening_phrase():
+    notmuch1 = 'Not a lot happening right now'
+    notmuch2 = 'Siri wake up - something might happen'
+    notmuch3 = 'Not a lot of action right now'
+    notmuch4 = 'The ref is asking the boxers to get to work'
+    return np.random.choice([notmuch1, notmuch2, notmuch3, notmuch4])
 
 
 def body_party():

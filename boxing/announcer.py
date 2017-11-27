@@ -193,7 +193,7 @@ def showboating(history, op_history):
 def blocked(history, op_history):
     if missed(history):
         op_current_move, op_current_did_hit = op_history[-1]
-        if op_current_move is block_move(op_current_move):
+        if block_move(op_current_move):
             return True
     return False
 
