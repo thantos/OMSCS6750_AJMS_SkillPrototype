@@ -1,37 +1,13 @@
 from __future__ import print_function
 from json import loads
 import os
+from skill_adaptors import BoxingSkillAdaptor
+from skill_adaptors import QPSkillAdaptor
+from skill_helpers import build_speechlet_response, build_response
 
 
-# --------------- Helpers that build all of the responses ---------------------
-
-def build_speechlet_response(title, output, reprompt_text, should_end_session):
-    return {
-        'outputSpeech': {
-            'type': 'PlainText',
-            'text': output
-        },
-        'card': {
-            'type': 'Simple',
-            'title': "SessionSpeechlet - " + title,
-            'content': "SessionSpeechlet - " + output
-        },
-        'reprompt': {
-            'outputSpeech': {
-                'type': 'PlainText',
-                'text': reprompt_text
-            }
-        },
-        'shouldEndSession': should_end_session
-    }
-
-
-def build_response(session_attributes, speechlet_response):
-    return {
-        'version': '1.0',
-        'sessionAttributes': session_attributes,
-        'response': speechlet_response
-    }
+boxing_adaptor = BoxingSkillAdaptor()
+qp_adaptor = QPSkillAdaptor()
 
 
 # --------------- Functions that control the skill's behavior -----------------
@@ -81,7 +57,12 @@ def loadSceneData(scene_name):
 
 def loadScene(scene_name, intent_data, session_attributes):
     if scene_name is None:
-        scene = "tutorial"
+        scene_name = discoverScene(intent_data)
+        if scene_name is None:
+            return build_response({}, build_speechlet_response(
+                    "Select Game",
+                    "Select a game: Quick Particle, Boxing, or Tutorial.",
+                    None, False))
 
     scene_data = loadSceneData(scene_name)
 
@@ -89,7 +70,26 @@ def loadScene(scene_name, intent_data, session_attributes):
         return handleSceneType(
             scene_name, scene_data, intent_data, session_attributes)
     else:
-        raise ValueError("Invalid scene: " + scene)
+        raise ValueError("Invalid scene: " + scene_name)
+
+
+def discoverScene(intent_data):
+    """Discover the scene selected using intets."""
+    intent_name = intent_data.get("name")
+
+    slots = intent_data.get("slots", {})
+
+    if intent_name == "sceneSelectIntent":
+        if "introSelectSlot" in slots and \
+           "value" in slots["introSelectSlot"]:
+            return "tutorial"
+        if "quickParticleSelectSlot" in slots and \
+           "value" in slots["quickParticleSelectSlot"]:
+            return "qp"
+        if "boxingSelectSlot" in slots and \
+           "value" in slots["boxingSelectSlot"]:
+            return "boxing"
+    return None
 
 
 def handleSceneType(scene_name, scene_data, intent_data, session_attributes):
@@ -102,6 +102,10 @@ def handleSceneType(scene_name, scene_data, intent_data, session_attributes):
     if t == "simple":
         return handleSimpleScene(
             scene_name, scene_data, intent_data, session_attributes)
+    elif t == "qp":
+        return qp_adaptor.on_intent(intent_data, session_attributes)
+    elif t == "boxing":
+        return boxing_adaptor.on_intent(intent_data, session_attributes)
     else:
         raise ValueError("Unhandled scene type: " + t)
 
@@ -179,11 +183,7 @@ def on_launch(launch_request, session):
 
     print("on_launch requestId=" + launch_request['requestId'] +
           ", sessionId=" + session['sessionId'])
-    # Dispatch to your skill's launch
-    # return build_response(
-    #    {"scene": "tutorial", "meta": {"round": 1}},
-    #    get_welcome_response())
-    return loadScene("tutorial", {}, {})
+    return loadScene(None, {}, {})
 
 
 def catchBaseIntent(intent_name):
@@ -205,7 +205,7 @@ def on_intent(intent_request, session):
 
     intent = intent_request['intent']
     intent_name = intent['name']
-    attributes = session['attributes']
+    attributes = session.get('attributes')
 
     baseResponse = catchBaseIntent(intent_name)
 
