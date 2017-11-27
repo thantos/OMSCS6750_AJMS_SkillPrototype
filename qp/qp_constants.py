@@ -48,3 +48,10 @@ class END_GAME_STATES(object):
     PLAYER_HULL_DESTROYED = EndGameState(True)
     PLAYER_LIFE_SUPPORT_LOSS = EndGameState(True)
     OPPONENT_HULL_DESTROYED = EndGameState(False)
+
+
+class CONSTANTS(object):
+    """Misc constants."""
+
+    STARTING_CREW_MEMBERS = 2
+    CREW_NAME_POOL = ["Amy", "Jerri", "Sam", "Mick", "Lester"]
