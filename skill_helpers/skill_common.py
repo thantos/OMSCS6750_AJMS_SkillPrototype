@@ -3,11 +3,11 @@
 # --------------- Helpers that build all of the responses ---------------------
 
 
-def build_speechlet_response(title, output, reprompt_text, should_end_session):
+def build_speechlet_response(title, output, reprompt_text, should_end_session, text_type='PlainText'):
     """Build speechlet response."""
     return {
         'outputSpeech': {
-            'type': 'PlainText',
+            'type': text_type,
             'text': output
         },
         'card': {
@@ -17,7 +17,7 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         },
         'reprompt': {
             'outputSpeech': {
-                'type': 'PlainText',
+                'type': text_type,
                 'text': reprompt_text
             }
         },
