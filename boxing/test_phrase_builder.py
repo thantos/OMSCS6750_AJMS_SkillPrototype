@@ -42,9 +42,6 @@ class TestMoves(TestCase):
 
             phrase = build(gs)
             print gs[CURRENTTURN], gs[CURRENTROUND], phrase
-            # run this a bunch with random moves and find all the mistackes
-            # A big Lincoln from George will likely send uppercut to the <say-as interpret-as='spell-out'>CTE</say-as> protocol tomorrow.  George just laid down the law on Lincoln with a big uppercut. Lincoln misses with a uppercut. George is starting to slow down a big. Lincoln is taking quite a few hits. Lincoln is starting to slow down a big.
 
-            # add did_hit to the topics -> duh
             if gs[ANNOUNCE] == ANNOUNCEGameOver:
                 break
