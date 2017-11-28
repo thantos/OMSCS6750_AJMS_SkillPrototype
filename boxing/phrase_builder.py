@@ -123,22 +123,25 @@ def build_gameover(gs):
 
 
 def decision_phrase(name1, name2, gs):
-    sc = score(gs)
-    print 'score %d - %d' % (sc[0], sc[1])
+    player_score, op_score = score(gs)
+
     rounds = gs[NUMROUNDS]
 
     winner = ''
-    if sc[0] > sc[1]:
+    if player_score > op_score:
         winner = name1
-
-    if sc[1] > sc[0]:
+        win_score = player_score
+        lose_score = op_score
+    if op_score > player_score:
         winner = name2
+        win_score = op_score
+        lose_score = player_score
 
     if winner == '':
         end1 = "And that's the final bell. After %d grueling rounds this match ends in a draw. It's all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % rounds
     else:
-        end1 = "And that's the final bell. After %d grueling rounds this match will be decided by the judges. And it's %s. %s wins the match. It's all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % (
-            rounds, winner, winner)
+        end1 = "And that's the final bell. After %d grueling rounds this match will be decided by the judges. By a score of %d to %d... %s wins the match. It's all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % (
+            rounds, win_score, lose_score, winner)
 
     return end1
 
@@ -353,10 +356,9 @@ def blocked_phrase(name1, name2, gs):
     block = get_move_from_name(name2, gs)
     block1 = '%s telegraphed that %s. %s easily blocks it.' % (name1, move, name2)
     block2 = '%s blocks a %s from %s.' % (name2, move, name1)
-    block3 = 'It will take more than that %s from %s.' % (move, name1)
+    block3 = 'It will take more than that %s from %s to hit %s.' % (move, name1, name2)
     block4 = "%s's %s defense is really good right now." % (name2, block)
-    block5 = '%s from %s.' % (block, name2)
-    return np.random.choice([block1, block2, block3, block4, block5])
+    return np.random.choice([block1, block2, block3, block4])
 
 
 def notmuchhappening_phrase():
