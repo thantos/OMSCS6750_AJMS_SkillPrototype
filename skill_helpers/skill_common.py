@@ -1,13 +1,21 @@
 """Come helers that sklls use."""
 
+
 # --------------- Helpers that build all of the responses ---------------------
 
 
-def build_speechlet_response(title, output, reprompt_text, should_end_session, text_type='PlainText'):
+def build_speechlet_response(title, output, reprompt_text, should_end_session, plain_text=True):
     """Build speechlet response."""
+    if plain_text:
+        return build_speechlet_response_plain(title, output, reprompt_text, should_end_session)
+    else:
+        return build_speechlet_response_ssml(title, output, reprompt_text, should_end_session)
+
+
+def build_speechlet_response_plain(title, output, reprompt_text, should_end_session):
     return {
         'outputSpeech': {
-            'type': text_type,
+            'type': 'PlainText',
             'text': output
         },
         'card': {
@@ -17,8 +25,29 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session, t
         },
         'reprompt': {
             'outputSpeech': {
-                'type': text_type,
+                'type': 'PlainText',
                 'text': reprompt_text
+            }
+        },
+        'shouldEndSession': should_end_session
+    }
+
+
+def build_speechlet_response_ssml(title, output, reprompt_text, should_end_session):
+    return {
+        'outputSpeech': {
+            'type': 'SSML',
+            'ssml': output
+        },
+        'card': {
+            'type': 'Simple',
+            'title': "SessionSpeechlet - " + title,
+            'content': "SessionSpeechlet - " + output
+        },
+        'reprompt': {
+            'outputSpeech': {
+                'type': 'SSML',
+                'ssml': reprompt_text
             }
         },
         'shouldEndSession': should_end_session
