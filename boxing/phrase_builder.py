@@ -57,35 +57,36 @@ def build_midround(gs):
         phrase = ''
         if topic == TOPICShowboat:
             phrase = showboat_phrase(name1, name2)
-        if topic == TOPICBlocked:
+        elif topic == TOPICBlocked:
             phrase = blocked_phrase(name1, name2, gs)
-        if topic == TOPICHit:
+        elif topic == TOPICHit:
             phrase = hit_phrase(name1, name2, gs)
-        if topic == TOPICHealthgood:
+        elif topic == TOPICHealthgood:
             phrase = healthgood_phrase(name1)
-        if topic == TOPICHealthok:
+        elif topic == TOPICHealthok:
             phrase = healthok_phrase(name1)
-        if topic == TOPICHealthlow:
+        elif topic == TOPICHealthlow:
             phrase = healthlow_phrase(name1)
-        if topic == TOPICStaminagood:
+        elif topic == TOPICStaminagood:
             phrase = staminagood_phrase(name1)
-        if topic == TOPICStaminaok:
+        elif topic == TOPICStaminaok:
             phrase = staminaok_phrase(name1)
-        if topic == TOPICStaminalow:
+        elif topic == TOPICStaminalow:
             phrase = staminalow_phrase(name1)
-        if topic == TOPICBighit:
+        elif topic == TOPICBighit:
             phrase = bighit_phrase(name1, name2, gs)
-        if topic == TOPICMiss:
+        elif topic == TOPICMiss:
             phrase = miss_phrase(name1, name2, gs)
-        if topic == TOPICBoring:
+        elif topic == TOPICBoring:
             phrase = boring_phrase()
-        if topic == TOPICHardtohit:
+        elif topic == TOPICHardtohit:
             phrase = hardtohit_phrase(name1, name2)
 
-        if not phrase:
-            phrase = notmuchhappening_phrase()
         midround.append(phrase)
-    # IF THIS IS EMPTY DESCRIBE THE PUNCHES
+    if len(midround) == 0:
+        midround = [notmuchhappening_phrase()]
+
+    # Need to add topics for wrapup, feint and both block
     return ' '.join(midround)
 
 
@@ -362,11 +363,15 @@ def blocked_phrase(name1, name2, gs):
 
 
 def notmuchhappening_phrase():
-    notmuch1 = 'Not a lot happening right now'
-    notmuch2 = 'Siri wake up - something might happen'
-    notmuch3 = 'Not a lot of action right now'
-    notmuch4 = 'The ref is asking the boxers to get to work'
-    return np.random.choice([notmuch1, notmuch2, notmuch3, notmuch4])
+    notmuch1 = 'Not a lot happening right now.'
+    notmuch2 = 'Siri wake up - something might happen.'
+    notmuch3 = 'Not a lot of action right now.'
+    notmuch4 = 'The ref is asking the boxers to get to work.'
+    notmuch5 = 'The ref is separating the two fighters.'
+    notmuch6 = 'They are looking for an opening.'
+    notmuch7 = 'There is a lot of dancing around going on.'
+
+    return np.random.choice([notmuch1, notmuch2, notmuch3, notmuch4, notmuch5, notmuch6, notmuch7])
 
 
 def body_party():

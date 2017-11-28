@@ -36,8 +36,8 @@ class TestMoves(TestCase):
         gs[PLAYERBONUS] = ADsuper
 
         for i in range(500):
-            gs[OPPONENTMOVE] = MOVEbob
-            gs[PLAYERMOVE] = MOVEjab
+            gs[OPPONENTMOVE] = random_move()
+            gs[PLAYERMOVE] = random_move()
             gs = update(gs)
 
             phrase = build(gs)
