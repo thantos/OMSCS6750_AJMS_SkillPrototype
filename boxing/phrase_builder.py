@@ -347,6 +347,7 @@ def hardtohit_phrase(name1, name2):
     miss4 = '%s is impossible to hit.' % (name2)
     return np.random.choice([miss1, miss2, miss3, miss4])
 
+
 def blocked_phrase(name1, name2, gs):
     move = get_move_from_name(name1, gs)
     block = get_move_from_name(name2, gs)
@@ -356,6 +357,7 @@ def blocked_phrase(name1, name2, gs):
     block4 = "%s's %s defense is really good right now." % (name2, block)
     block5 = '%s from %s.' % (block, name2)
     return np.random.choice([block1, block2, block3, block4, block5])
+
 
 def notmuchhappening_phrase():
     notmuch1 = 'Not a lot happening right now'

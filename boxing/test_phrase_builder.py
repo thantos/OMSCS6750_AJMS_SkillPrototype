@@ -48,5 +48,3 @@ class TestMoves(TestCase):
             # add did_hit to the topics -> duh
             if gs[ANNOUNCE] == ANNOUNCEGameOver:
                 break
-
-
