@@ -18,6 +18,9 @@ TOPICMiss = 'miss'
 TOPICBoring = 'boring'
 TOPICShowboat = 'showboat'
 TOPICHardtohit = 'hard to hit'
+TOPICHit = 'hit'
+TOPICBlocked = 'blocked'
+
 # bonus hits should have their own topic - Haymaker etc, bolo punch, rope-a-dope
 
 PLAYERNAME = 'player name'
@@ -45,10 +48,10 @@ MOVEuppercut = 'uppercut'
 MOVEfeint = 'feint'
 MOVEtaunt = 'taunt'
 MOVEwrapup = 'wrapup'
-MOVEbob = 'bobandweave'
+MOVEbob = 'bob and weave'
 MOVEfootwork = 'footwork'
-MOVEhandsup = 'handsup'
-MOVEprotect = 'protectbody'
+MOVEhandsup = 'hands up'
+MOVEprotect = 'protecting the body'
 
 ADadvantage = 'adv'
 ADdisadvantage = 'dis'

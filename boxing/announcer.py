@@ -127,10 +127,13 @@ def hit_topic(game_state, player=True):
         op_history = game_state[PLAYERHISTORY]
 
     topics = []
-    if missed(history):
+
+    if blocked(history, op_history):
+        topics.append(TOPICBlocked)
+    elif missed(history):
         topics.append(TOPICMiss)
 
-    if big_hit(history):
+    if big_hit(history) and not missed(history):
         topics.append(TOPICBighit)
 
     if hard_to_hit(op_history):
@@ -138,6 +141,8 @@ def hit_topic(game_state, player=True):
 
     if showboating(history, op_history):
         topics.append(TOPICShowboat)
+    if regular_hit(history) and not big_hit(history):
+        topics.append(TOPICHit)
 
     return topics
 
@@ -150,6 +155,13 @@ def missed(history):
 def big_hit(history):
     current_move, current_did_hit = history[-1]
     if current_move == MOVEuppercut:
+        return True
+    return False
+
+
+def regular_hit(history):
+    current_move, current_did_hit = history[-1]
+    if attack_move(current_move) and current_did_hit:
         return True
     return False
 
@@ -168,14 +180,27 @@ def hard_to_hit(op_history):
     return True
 
 
+def showboating(history, op_history):
+    current_move, current_did_hit = history[-1]
+    op_current_move, op_current_did_hit = op_history[-1]
+
+    op_landed_hit = op_current_did_hit and attack_move(op_current_move)
+    if current_move == MOVEtaunt and not op_landed_hit:
+        return True
+    return False
+
+
+def blocked(history, op_history):
+    if missed(history):
+        op_current_move, op_current_did_hit = op_history[-1]
+        if block_move(op_current_move):
+            return True
+    return False
+
+
 def attack_move(move):
     return move in [MOVEuppercut, MOVEjab, MOVEcross, MOVEhook]
 
 
-def showboating(history, op_history):
-    current_move, current_did_hit = history[-1]
-    op_current_move, op_current_did_hit = history[-1]
-
-    if current_move == MOVEtaunt and not op_current_did_hit:
-        return True
-    return False
+def block_move(move):
+    return move in [MOVEhandsup, MOVEprotect, MOVEbob, MOVEfootwork]

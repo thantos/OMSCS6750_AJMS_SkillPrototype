@@ -20,10 +20,10 @@ def initialize(game_state):
     game_state[OPPONENTNAME] = 'Abraham Lincoln'
 
     game_state[ANNOUNCE] = ANNOUNCEIntro
-    game_state[TOPICS] = [[],[]]
+    game_state[TOPICS] = [[], []]
 
     # each round is a random length of turns ~ 6 on average
-    game_state[TURNS] = map(int, np.random.normal(6, 1.25, game_state[NUMROUNDS]))
+    game_state[TURNS] = map(int, np.random.normal(10, 2, game_state[NUMROUNDS]))
     game_state[CURRENTROUND] = 1
     game_state[CURRENTTURN] = 1
 

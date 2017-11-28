@@ -69,7 +69,7 @@ class TestMoves(TestCase):
 
         p_tpcs3, o_tpcs3 = gs3[TOPICS]
         self.assertEqual(o_tpcs3, [TOPICMiss])
-        self.assertEqual(p_tpcs3, [])
+        self.assertEqual(p_tpcs3, [TOPICHit])
 
         # regular hit and a miss -
         # opp had three misses = hard to hit other guy is hard to hit
@@ -80,8 +80,7 @@ class TestMoves(TestCase):
 
         p_tpcs4, o_tpcs4 = gs4[TOPICS]
         self.assertEqual(sorted(o_tpcs4), sorted([TOPICMiss, TOPICHealthok]))
-        self.assertEqual(p_tpcs4, [TOPICHardtohit])
-
+        self.assertEqual(p_tpcs4, [TOPICHardtohit, TOPICHit])
 
         # regular hit and a miss -
         # opp had three misses = hard to hit other guy is hard to hit
@@ -92,7 +91,7 @@ class TestMoves(TestCase):
 
         p_tpcs5, o_tpcs5 = gs5[TOPICS]
         self.assertEqual(sorted(o_tpcs5), sorted([TOPICMiss, TOPICStaminaok]))
-        self.assertEqual(p_tpcs5, [TOPICHardtohit])
+        self.assertEqual(p_tpcs5, [TOPICHardtohit, TOPICHit])
 
         # regular hit and a miss -
         # opp had three misses = hard to hit other guy is hard to hit
