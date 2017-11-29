@@ -67,3 +67,32 @@ def resolve_turn(game_state):
     game_state[OPPONENTBONUS] = boxer.bonus(game_state, player=False)
 
     return game_state
+
+
+def update_with_intent(intent_data, session):
+    player_move = get_move_from_intent(intent_data)
+    session[PLAYERMOVE] = player_move
+    session = update(session)
+    return session
+
+
+def get_move_from_intent(intent_data):
+    move_name = intent_data.get(INTENTName)
+    move_slots = intent_data.get(INTENTSlots)
+
+    if move_name == INTENTPunch:
+        move = get_punch(move_slots)
+    elif move_name == INTENTBlock:
+        move = get_block(move_slots)
+    else:
+        move = MOVEhandsup
+
+    return move
+
+
+def get_punch(move_slots):
+    return MOVEuppercut
+
+
+def get_block(move_slots):
+    return MOVEfootwork

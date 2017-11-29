@@ -1,7 +1,20 @@
 from unittest import TestCase
 from boxing_skill_adaptor import *
-from boxing_strings import *
 
+INTENTName = 'name'
+INTENTPunch = 'punchIntent'
+ANNOUNCE = 'announce'
+MOVEuppercut = 'uppercut'
+OPPONENTHP = 'opponent hp'
+PLAYERMOVE = 'player move'
+OPPONENTMOVE = 'opponent move'
+PLAYERBONUS = 'player bonus'
+OPPONENTBONUS = 'opponent bonus'
+ADsuper = 'super'
+ADexhausted = 'exhausted'
+SESSION = 'sessionAttributes'
+MOVEprotect = 'protects the body'
+ANNOUNCEGameOver = 'game over'
 
 def add_dict_to_session(d, session):
     for key in d:
@@ -42,6 +55,3 @@ class TestBoxingSkillAdaptor(TestCase):
 
             if session[ANNOUNCE] == ANNOUNCEGameOver:
                 break
-
-        # self.assertTrue(session[OPPONENTHP] == session[PLAYERHP])
-        # self.assertTrue(session[OPPONENTHP] == 20)

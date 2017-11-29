@@ -1,59 +1,21 @@
 """"""
 from skill_helpers import build_response, build_speechlet_response
 
-import match
-import phrase_builder
-
-from boxing_strings import *
-
+from boxing import update_with_intent, build, reprompt, game_over
 
 class BoxingSkillAdaptor(object):
     """Translates skill interactions into boxing game interactions."""
-    moves = [MOVEjab, MOVEcross, MOVEhook, MOVEuppercut, MOVEwrapup, MOVEfeint, MOVEtaunt, MOVEbob,
-             MOVEfootwork, MOVEhandsup, MOVEprotect]
 
     def on_intent(self, intent_data, session):
-        session = self.update_with_intent(intent_data, session)
-        speech = phrase_builder.build(session)
-        reprompt = self.reprompt(session)
-        should_end = self.game_over(session)
+        session = update_with_intent(intent_data, session)
+        speech = build(session)
+        reprmp = reprompt(session)
+        should_end = game_over(session)
         response = build_speechlet_response("Boxing",
                                             speech,
-                                            reprompt_text=reprompt,
+                                            reprompt_text=reprmp,
                                             should_end_session=should_end,
                                             plain_text=False)
         return build_response(session, response)
-
-    def update_with_intent(self, intent_data, session):
-        player_move = self.player_move(intent_data)
-        session[PLAYERMOVE] = player_move
-        session = match.update(session)
-        return session
-
-    def player_move(self, intent_data):
-        move_name = intent_data.get(INTENTName)
-        move_slots = intent_data.get(INTENTSlots)
-
-        if move_name == INTENTPunch:
-            move = self.get_punch(move_slots)
-        elif move_name == INTENTBlock:
-            move = self.get_block(move_slots)
-        else:
-            move = MOVEhandsup
-
-        assert move in BoxingSkillAdaptor.moves
-        return move
-
-    def reprompt(self, session):
-        return phrase_builder.reprompt(session)
-
-    def game_over(self, session):
-        return session[ANNOUNCE] == ANNOUNCEGameOver
-
-    def get_punch(self, move_slots):
-        return MOVEuppercut
-
-    def get_block(self, move_slots):
-        return MOVEfootwork
 
 
