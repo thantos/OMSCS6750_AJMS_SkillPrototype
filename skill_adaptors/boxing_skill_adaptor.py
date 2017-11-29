@@ -50,8 +50,8 @@ class BoxingSkillAdaptor(object):
     def game_over(self, session):
         return session[ANNOUNCE] == ANNOUNCEGameOver
 
-    def get_move(self, move_slots):
-        return MOVEjab
+    def get_punch(self, move_slots):
+        return MOVEuppercut
 
     def get_block(self, move_slots):
         return MOVEfootwork
