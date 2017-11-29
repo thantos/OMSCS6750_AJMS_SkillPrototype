@@ -1,5 +1,5 @@
 from boxing_strings import *
-import numpy as np
+from random import choice, random
 
 BIGHITS = ['argh', 'aooga', 'bada bing bada boom', 'bam', 'bang', 'batter up', 'bazinga', 'beep beep', 'boom', 'booya',
            'kaching', 'kerbam', 'choo choo', 'ding dong', 'dynomite', 'great scott', 'honk', 'knock knock', 'kerpow',
@@ -17,7 +17,7 @@ def reprompt(gs):
     reprompt1 = '%s looks to the corner for help.' % player_name
     reprompt2 = '%s is waiting for the coach to say something.' % player_name
     reprompt3 = 'What will the coach call out next, Siri?'
-    return np.random.choice([reprompt1, reprompt2, reprompt3])
+    return choice([reprompt1, reprompt2, reprompt3])
 
 
 def build(gs):
@@ -42,7 +42,7 @@ def name(gs, player=True, short=False):
     if not short:
         return n
 
-    return np.random.choice(n.split(' '))
+    return choice(n.split(' '))
 
 
 def build_intro(gs):
@@ -220,17 +220,17 @@ def hit_phrase(name, opp_name, gs):
 
     hit_phrases = [hit_phrase0, hit_phrase1, hit_phrase2, hit_phrase3, hit_phrase4, hit_phrase5, hit_phrase6,
                    hit_phrase7]
-    return np.random.choice(hit_phrases)
+    return choice(hit_phrases)
 
 
 def showboat_phrase(name, opp_name):
-    if np.random.random() > 0.8:
-        taunt = np.random.choice(TAUNTS)
+    if random() > 0.8:
+        taunt = choice(TAUNTS)
         intrj = interjection(taunt)
     else:
         intrj = ''
 
-    dance_move = name + ' just ' + np.random.choice(DANCEMOVES)
+    dance_move = name + ' just ' + choice(DANCEMOVES)
     first_line = ' '.join([intrj, dance_move])
 
     second1 = "I'm sure %s doesn't like being taunted." % opp_name
@@ -239,7 +239,7 @@ def showboat_phrase(name, opp_name):
     second4 = '%s is really feeling it. Look out for a big one here.' % name
     second5 = 'That sure is intimidating.'
     second6 = 'I agree Siri, that would really piss me off.'
-    second_line = np.random.choice([second1, second2, second3, second4, second5, second6])
+    second_line = choice([second1, second2, second3, second4, second5, second6])
 
     return ' '.join([first_line, second_line])
 
@@ -247,39 +247,39 @@ def showboat_phrase(name, opp_name):
 def healthgood_phrase(name1):
     health1 = '%s is looking better.' % name1
     health2 = 'Siri thinks %s is getting a second wind.' % name1
-    return np.random.choice([health1, health2])
+    return choice([health1, health2])
 
 
 def healthok_phrase(name1):
     health1 = '%s is taking quite a few hits.' % name1
     health2 = '%s is getting roughed up.' % name1
-    return np.random.choice([health1, health2])
+    return choice([health1, health2])
 
 
 def healthlow_phrase(name1):
     health1 = '%s is bleeding all over the place.' % name1
     health2 = 'Can %s even see? Their eyes are almost swollen shut.' % name1
     health3 = '%s looks really rough.' % name1
-    return np.random.choice([health1, health2, health3])
+    return choice([health1, health2, health3])
 
 
 def staminagood_phrase(name1):
     stamina1 = '%s looks fresh.' % name1
     stamina2 = "%s's preparation is really showing. %s looks very strong out there." % (name1, name1)
-    return np.random.choice([stamina1, stamina2])
+    return choice([stamina1, stamina2])
 
 
 def staminaok_phrase(name1):
     stamina1 = '%s is starting to slow down a bit.' % name1
     stamina2 = '%s is getting fatigued. All these big punches are starting to wear them down.' % name1
-    return np.random.choice([stamina1, stamina2])
+    return choice([stamina1, stamina2])
 
 
 def staminalow_phrase(name1):
     stamina1 = '%s is dead tired.' % name1
     stamina2 = '%s has nothing left in the tank.' % name1
     stamina3 = "I'm not sure %s has enough energy to even throw a punch right now." % name1
-    return np.random.choice([stamina1, stamina2, stamina3])
+    return choice([stamina1, stamina2, stamina3])
 
 
 def boring_phrase():
@@ -288,7 +288,7 @@ def boring_phrase():
     boring3 = 'The ref just stepped in to tell the boxers to get to work here.'
     boring4 = 'The match is so slow some of the crowd is leaving.'
     boring5 = 'What a sleeper. Someone needs to throw a punch.'
-    return np.random.choice([boring1, boring2, boring3, boring4, boring5])
+    return choice([boring1, boring2, boring3, boring4, boring5])
 
 
 def sorted_by_exciting(topics):
@@ -323,8 +323,8 @@ def sorted_named_topics(gs):
 def bighit_phrase(name1, name2, gs):
     move = get_move_from_name(name1, gs)
 
-    if np.random.random() > 0.4:
-        hit = np.random.choice(BIGHITS)
+    if random() > 0.4:
+        hit = choice(BIGHITS)
         intrj = interjection(hit)
     else:
         intrj = ''
@@ -335,7 +335,7 @@ def bighit_phrase(name1, name2, gs):
         move, name1, name2)
     bighit4 = 'Aw lawdy lawdy what a big %s from %s.' % (move, name1)
 
-    bighit = np.random.choice([bighit1, bighit2, bighit3, bighit4])
+    bighit = choice([bighit1, bighit2, bighit3, bighit4])
     return ' '.join([intrj, bighit])
 
 
@@ -349,7 +349,7 @@ def miss_phrase(name1, name2, gs):
     miss5 = '%s misses the %s.' % (name1, move)
     miss6 = '%s makes em miss.' % name2
     miss7 = 'That %s from %s was way off.' % (move, name1)
-    return np.random.choice([miss1, miss2, miss3, miss4, miss5, miss6, miss7])
+    return choice([miss1, miss2, miss3, miss4, miss5, miss6, miss7])
 
 
 def hardtohit_phrase(name1, name2):
@@ -357,7 +357,7 @@ def hardtohit_phrase(name1, name2):
     miss2 = 'Can %s even see %s?' % (name1, name2)
     miss3 = '%s just keeps missing.' % (name1)
     miss4 = '%s is impossible to hit.' % (name2)
-    return np.random.choice([miss1, miss2, miss3, miss4])
+    return choice([miss1, miss2, miss3, miss4])
 
 
 def blocked_phrase(name1, name2, gs):
@@ -367,7 +367,7 @@ def blocked_phrase(name1, name2, gs):
     block2 = '%s blocks a %s from %s.' % (name2, move, name1)
     block3 = 'It will take more than that %s from %s to hit %s.' % (move, name1, name2)
     block4 = "%s's %s defense is really good right now." % (name2, block)
-    return np.random.choice([block1, block2, block3, block4])
+    return choice([block1, block2, block3, block4])
 
 
 def notmuchhappening_phrase():
@@ -379,20 +379,20 @@ def notmuchhappening_phrase():
     notmuch6 = 'They are looking for an opening.'
     notmuch7 = 'There is a lot of dancing around going on.'
 
-    return np.random.choice([notmuch1, notmuch2, notmuch3, notmuch4, notmuch5, notmuch6, notmuch7])
+    return choice([notmuch1, notmuch2, notmuch3, notmuch4, notmuch5, notmuch6, notmuch7])
 
 
 def body_party():
-    return np.random.choice(['head', 'mouth', 'body', 'face', 'ear', 'chin'])
+    return choice(['head', 'mouth', 'body', 'face', 'ear', 'chin'])
 
 
 def hand():
-    return np.random.choice(['left', 'right'])
+    return choice(['left', 'right'])
 
 
 def adjective():
-    return np.random.choice(['speedy', 'quick', 'heavy', 'slow', 'crafty'])
+    return choice(['speedy', 'quick', 'heavy', 'slow', 'crafty'])
 
 
 def dodge():
-    return np.random.choice(['avoided', 'side stepped', 'got out of the way of', 'ducked'])
+    return choice(['avoided', 'side stepped', 'got out of the way of', 'ducked'])

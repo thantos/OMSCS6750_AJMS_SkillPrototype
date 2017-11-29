@@ -1,7 +1,15 @@
 import boxer
 import announcer
-import numpy as np
+from random import choice
 from boxing_strings import *
+
+
+def random_rounds(n_rounds):
+
+    rounds = []
+    for i in range(n_rounds):
+        rounds.append(choice(range(6,14)))
+    return rounds
 
 
 def initialize(game_state):
@@ -23,7 +31,7 @@ def initialize(game_state):
     game_state[TOPICS] = [[], []]
 
     # each round is a random length of turns ~ 6 on average
-    game_state[TURNS] = map(int, np.random.normal(10, 2, game_state[NUMROUNDS]))
+    game_state[TURNS] = random_rounds(game_state[NUMROUNDS])
     game_state[CURRENTROUND] = 1
     game_state[CURRENTTURN] = 1
 
