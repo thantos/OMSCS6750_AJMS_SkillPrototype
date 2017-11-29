@@ -79,7 +79,7 @@ def resolve_turn(game_state):
 
 def update_with_intent(intent_data, session):
     if not session:
-        initialize({})
+        session = initialize({})
     player_move = get_move_from_intent(intent_data)
     session[PLAYERMOVE] = player_move
     session = update(session)
