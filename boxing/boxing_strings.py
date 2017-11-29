@@ -58,3 +58,6 @@ ADdisadvantage = 'dis'
 ADsuper = 'super'
 ADexhausted = 'exhausted'
 ADNobonus = 'no bonus'
+
+INTENTName = 'name'
+SESSION = 'sessionAttributes'
