@@ -2,7 +2,7 @@ import boxer
 import announcer
 from random import choice
 from boxing_strings import *
-
+import phrase_builder
 
 def random_rounds(n_rounds):
     rounds = []
@@ -50,9 +50,11 @@ def update(game_state_prev):
 
     game_state = resolve_turn(game_state)
 
-    game_state = announcer.prompt(game_state)
-
     game_state = announcer.topics(game_state_prev, game_state)
+
+    game_state['speech'] = phrase_builder.build(game_state)
+
+    game_state = announcer.prompt(game_state)
 
     return game_state
 
@@ -86,7 +88,7 @@ def ai_move(game_state):
 
 
 def update_with_intent(intent_data, session):
-    if not session:
+    if not session or intent_data['name'] == INTENTSelect:
         session = initialize({AIType: AIRandom})
     player_move = get_move_from_intent(intent_data)
     session[PLAYERMOVE] = player_move

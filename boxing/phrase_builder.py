@@ -17,20 +17,21 @@ def reprompt(gs):
     reprompt1 = '%s looks to the corner for help.' % player_name
     reprompt2 = '%s is waiting for the coach to say something.' % player_name
     reprompt3 = 'What will the coach call out next, Siri?'
-    return choice([reprompt1, reprompt2, reprompt3])
+    return build_phrase(choice([reprompt1, reprompt2, reprompt3]))
 
 
 def build(gs):
     prompt = gs[ANNOUNCE]
 
     if ANNOUNCEIntro in prompt:
-        return build_intro(gs)
+        phrase = build_intro(gs)
     elif ANNOUNCEMidround in prompt:
-        return build_midround(gs)
+        phrase = build_midround(gs)
     elif ANNOUNCEBetweenRound in prompt:
-        return build_betweenround(gs)
+        phrase = build_betweenround(gs)
     else:
-        return build_gameover(gs)
+        phrase = build_gameover(gs)
+    return build_phrase(phrase)
 
 
 def name(gs, player=True, short=False):
@@ -51,10 +52,10 @@ def build_intro(gs):
     red = name(gs, player=False)
     first_line = "This is Alexa for <say-as interpret-as='"'spell-out'"'>BHO</say-as> sports and I'm here with Siri at the south lake union boxing arena."
     second_line = "In the red corner we have the reigning champion %s." % red
-    third_line = "In the blue corner we have the challenger %s with their new coach. Siri was just telling me that this new coach yells out every single move to %s. Yep, that's right Siri, it is weird to see every jab, hook, and cross called out by a coach. %s relies on the coach to know when to protect their body or keep the hands up or even when to bob and weave. That's right Siri, this is a new era of boxing." % (
+    third_line = "In the blue corner we have the challenger %s with their new coach. Siri was just telling me that this new coach yells out every single move to %s. Yep, that's right Siri, it is weird to see every jab, hook, and cross called out by a coach. %s relies on the coach to know when to protect his body or keep his hands up or even when to bob and weave. That's right Siri, this is a new era of boxing." % (
         blue, blue, blue_short)
     forth_line = "The fight is about to begin. Lets see what this new coach calls out first."
-    return build_phrase([first_line, second_line, third_line, forth_line])
+    return ' '.join([first_line, second_line, third_line, forth_line])
 
 
 def build_midround(gs):
@@ -186,8 +187,8 @@ def score_move(move, did_hit):
     return 0
 
 
-def build_phrase(sentences):
-    return '<speak>%s</speak>' % ' '.join(sentences)
+def build_phrase(phrase):
+    return '<speak>%s</speak>' % phrase
 
 
 def interjection(word):

@@ -63,6 +63,7 @@ INTENTName = 'name'
 INTENTSlots = 'slots'
 INTENTPunch = 'punchIntent'
 INTENTBlock = 'blockpunchIntent'
+INTENTSelect = 'sceneSelectIntent'
 
 SLOTSBobandweave = 'duck'
 
