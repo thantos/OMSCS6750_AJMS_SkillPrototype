@@ -68,3 +68,6 @@ SLOTSBobandweave = 'duck'
 
 
 SESSION = 'sessionAttributes'
+
+AIType = 'ai type'
+AIRandom = 'random moves'

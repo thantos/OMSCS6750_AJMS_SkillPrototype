@@ -5,10 +5,9 @@ from boxing_strings import *
 
 
 def random_rounds(n_rounds):
-
     rounds = []
     for i in range(n_rounds):
-        rounds.append(choice(range(6,14)))
+        rounds.append(choice(range(6, 14)))
     return rounds
 
 
@@ -47,6 +46,8 @@ def update(game_state_prev):
     # copy the game state
     game_state = dict(game_state_prev)
 
+    game_state = ai_move(game_state)
+
     game_state = resolve_turn(game_state)
 
     game_state = announcer.prompt(game_state)
@@ -77,9 +78,15 @@ def resolve_turn(game_state):
     return game_state
 
 
+def ai_move(game_state):
+    if game_state[AIType] == AIRandom:
+        game_state[OPPONENTMOVE] = boxer.random_move()
+    return game_state
+
+
 def update_with_intent(intent_data, session):
     if not session:
-        session = initialize({})
+        session = initialize({AIType: AIRandom})
     player_move = get_move_from_intent(intent_data)
     session[PLAYERMOVE] = player_move
     session = update(session)
