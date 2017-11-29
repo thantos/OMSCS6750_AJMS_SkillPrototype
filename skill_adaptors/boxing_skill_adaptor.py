@@ -10,12 +10,18 @@ from boxing_strings import *
 class BoxingSkillAdaptor(object):
     """Translates skill interactions into boxing game interactions."""
     moves = [MOVEjab, MOVEcross, MOVEhook, MOVEuppercut, MOVEwrapup, MOVEfeint, MOVEtaunt, MOVEbob,
-                      MOVEfootwork, MOVEhandsup, MOVEprotect]
+             MOVEfootwork, MOVEhandsup, MOVEprotect]
 
     def on_intent(self, intent_data, session):
         session = self.update_with_intent(intent_data, session)
         speech = phrase_builder.build(session)
-        response =  build_speechlet_response("Boxing", speech, None, True, plain_text=False)
+        reprompt = self.reprompt(session)
+        should_end = self.game_over(session)
+        response = build_speechlet_response("Boxing",
+                                            speech,
+                                            reprompt_text=reprompt,
+                                            should_end_session=should_end,
+                                            plain_text=False)
         return build_response(session, response)
 
     def update_with_intent(self, intent_data, session):
@@ -29,13 +35,8 @@ class BoxingSkillAdaptor(object):
         assert move_name in BoxingSkillAdaptor.moves
         return move_name
 
-# TODO
-# move the match test from phrase builder to test boxing skill adaptor
-# add randomized reprompt data "why aren't they doing anything?" what will the coach call out next? george looks to the cor
+    def reprompt(self, session):
+        return phrase_builder.reprompt(session)
 
-
-# response = BoxingSkillAdaptor().on_intent({'name':'jab'}, {OPPONENTMOVE:MOVEuppercut})
-# session = response['sessionAttributes']
-# response = BoxingSkillAdaptor().on_intent({'name':'jab'}, session)
-# print response
-# print response['sessionAttributes']
+    def game_over(self, session):
+        return session[ANNOUNCE] == ANNOUNCEGameOver
