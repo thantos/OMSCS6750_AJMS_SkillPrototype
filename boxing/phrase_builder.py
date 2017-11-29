@@ -12,6 +12,14 @@ DANCEMOVES = ['did the moonwalk.', 'did the Hokey-Pokey.', 'did the Hustle.', 'd
               'stuck out his chin.', 'blew a kiss.', 'curtsied.']
 
 
+def reprompt(gs):
+    player_name = name(gs, player=True, short=True)
+    reprompt1 = '%s looks to the corner for help.' % player_name
+    reprompt2 = '%s is waiting for the coach to say something.' % player_name
+    reprompt3 = 'What will the coach call out next, Siri?'
+    return np.random.choice([reprompt1, reprompt2, reprompt3])
+
+
 def build(gs):
     prompt = gs[ANNOUNCE]
 

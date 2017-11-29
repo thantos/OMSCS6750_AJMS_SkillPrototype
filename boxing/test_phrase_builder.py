@@ -29,19 +29,3 @@ class TestMoves(TestCase):
 
         phrase = build(gs)
         self.assertTrue(phrase)
-
-    def test_alexa_midround(self):
-        gs = initialize({PLAYERMOVE: MOVEuppercut})
-        gs[OPPONENTMOVE] = MOVEuppercut
-        gs[PLAYERBONUS] = ADsuper
-
-        for i in range(500):
-            gs[OPPONENTMOVE] = random_move()
-            gs[PLAYERMOVE] = random_move()
-            gs = update(gs)
-
-            phrase = build(gs)
-            print gs[CURRENTTURN], gs[CURRENTROUND], phrase
-
-            if gs[ANNOUNCE] == ANNOUNCEGameOver:
-                break

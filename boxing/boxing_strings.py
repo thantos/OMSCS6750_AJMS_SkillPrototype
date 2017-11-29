@@ -58,3 +58,13 @@ ADdisadvantage = 'dis'
 ADsuper = 'super'
 ADexhausted = 'exhausted'
 ADNobonus = 'no bonus'
+
+INTENTName = 'name'
+INTENTSlots = 'slots'
+INTENTPunch = 'punchIntent'
+INTENTBlock = 'blockpunchIntent'
+
+SLOTSBobandweave = 'duck'
+
+
+SESSION = 'sessionAttributes'
