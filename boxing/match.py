@@ -79,8 +79,9 @@ def resolve_turn(game_state):
 
 
 def ai_move(game_state):
-    if game_state[AIType] == AIRandom:
-        game_state[OPPONENTMOVE] = boxer.random_move()
+    if AIType in game_state:
+        if game_state[AIType] == AIRandom:
+            game_state[OPPONENTMOVE] = boxer.random_move()
     return game_state
 
 
