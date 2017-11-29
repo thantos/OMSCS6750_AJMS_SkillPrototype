@@ -31,12 +31,29 @@ class BoxingSkillAdaptor(object):
         return session
 
     def player_move(self, intent_data):
-        move_name = intent_data.get("name")
-        assert move_name in BoxingSkillAdaptor.moves
-        return move_name
+        move_name = intent_data.get(INTENTName)
+        move_slots = intent_data.get(INTENTSlots)
+
+        if move_name == INTENTPunch:
+            move = self.get_punch(move_slots)
+        elif move_name == INTENTBlock:
+            move = self.get_block(move_slots)
+        else:
+            move = MOVEhandsup
+
+        assert move in BoxingSkillAdaptor.moves
+        return move
 
     def reprompt(self, session):
         return phrase_builder.reprompt(session)
 
     def game_over(self, session):
         return session[ANNOUNCE] == ANNOUNCEGameOver
+
+    def get_move(self, move_slots):
+        return MOVEjab
+
+    def get_block(self, move_slots):
+        return MOVEfootwork
+
+
