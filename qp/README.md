@@ -66,6 +66,11 @@
   * Station: Maintenance
   * Base Value: MIN(Range)
   * Range: ?
+* Maintenance (M)
+  * Rate at which the hull is repaired.
+  * Station: Maintenance
+  * Base Value: 0
+  * Range: ?
 
 ## Constants
 
@@ -321,3 +326,33 @@ If we cannot maintain life support, we don't keep on living.
 ### Positive Actions
 
 #### Levels
+
+## Game Start
+
+### Base Stats
+* Accuracy: >0 (Targeting Computer)
+* Max Hull Health: >0
+* Max Life Support: >0
+* Life Support: MLS (Life Support)
+* Hull Health: MH
+### Stats Provided By Stations At Start
+* Attack Power: 0 (Auto Turret)
+* Dodge: 0 (Cockpit)
+* Life Support Change: 0 (Life Support)
+* Warp (Engines)
+### Missing Stats at Start
+* Shield (Shields)
+* Intercept (Tractor Beam)
+* Maintenance (Maintenance)
+
+
+### Starting Stations
+* Life Support
+* Cockpit
+* Engines
+* Auto Turret
+### Not Starting Stations
+* Maintenance
+* Tractor Beam
+* Targeting Computer
+* Shields

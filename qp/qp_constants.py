@@ -34,6 +34,9 @@ BASE_STATS = {
 }
 
 
+STARTING_STATIONS = ["AUTO_TURRET", "COCKPIT", "LIFE_SUPPORT", "ENGINES"]
+
+
 class EndGameState(object):
     """Object representing a end game senerio."""
 

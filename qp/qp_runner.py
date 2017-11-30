@@ -1,5 +1,5 @@
 """QP Runner Module."""
-from qp import QPEngine, CONSTANTS, STATS
+from qp import QPEngine, CONSTANTS, STATS, STARTING_STATIONS, CREW_MEMBERS
 from state import QPGameState, Ship, StationState, StageState, \
     CrewMemberState, EnemyState
 import random
@@ -7,8 +7,6 @@ import random
 
 class QPRunner(object):
     """Logic for playing a game of QP."""
-
-    __starting_stations = ["AutoTurret", "Cockpit", "LifeSupport", "Shields"]
 
     def __init__(self):
         """Build new QP Runner."""
@@ -19,10 +17,10 @@ class QPRunner(object):
         # TODO add other starting stations
         return QPGameState(Ship(
                 {station: StationState()
-                    for station in self.__starting_stations},
+                    for station in STARTING_STATIONS},
                 {crew: CrewMemberState()
                     for crew in random.sample(
-                    CONSTANTS.CREW_NAME_POOL,
+                    CREW_MEMBERS.keys(),
                     CONSTANTS.STARTING_CREW_MEMBERS)},
                 {}),  # Leave stats empty for now
             None)
