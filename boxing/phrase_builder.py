@@ -55,8 +55,8 @@ def build_intro(gs):
     third_line = "In the blue corner we have the challenger %s with their new coach. Siri was just telling me that this new coach yells out every single move to %s. Yep, that's right Siri, it is weird to see every jab, hook, and cross called out by a coach. %s relies on the coach to know when to protect his body or keep his hands up or even when to bob and weave. That's right Siri, this is a new era of boxing." % (
         blue, blue, blue_short)
     forth_line = "The fight is about to begin. Lets see what this new coach calls out first."
-    # return ' '.join([first_line, second_line, third_line, forth_line])
-    return forth_line
+    return ' '.join([first_line, second_line, third_line, forth_line])
+
 
 def build_midround(gs):
     midround = []

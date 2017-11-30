@@ -39,10 +39,6 @@ def initialize(game_state):
 
 
 def update(game_state_prev):
-    # the first time through we won't have any game state
-    # initialize and return the game
-    if PLAYERHP not in game_state_prev:
-        return initialize(game_state_prev)
 
     # copy the game state
     game_state = dict(game_state_prev)
@@ -94,6 +90,10 @@ def update_with_intent(intent_data, session):
     player_move = get_move_from_intent(intent_data)
     session[PLAYERMOVE] = player_move
     session = update(session)
+
+    if session[ANNOUNCE] == ANNOUNCEIntro:
+        session[ANNOUNCE] = ANNOUNCEMidround
+
     return session
 
 
@@ -107,12 +107,14 @@ def get_move_from_intent(intent_data):
     move_name = intent_data.get(INTENTName)
     move_slots = intent_data.get(INTENTSlots)
 
-    if move_name == INTENTPunch:
-        move = get_punch(move_slots)
+    if move_name == INTENTUppercut:
+        move = MOVEuppercut
+    elif move_name == INTENTJab:
+        move = MOVEjab
     elif move_name == INTENTBlock:
         move = get_block(move_slots)
     else:
-        move = MOVEhandsup
+        move = MOVEuppercut
 
     return move
 

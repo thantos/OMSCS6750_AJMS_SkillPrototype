@@ -62,6 +62,8 @@ ADNobonus = 'no bonus'
 INTENTName = 'name'
 INTENTSlots = 'slots'
 INTENTPunch = 'punchIntent'
+INTENTUppercut = 'uppercutIntent'
+INTENTJab = 'jabIntent'
 INTENTBlock = 'blockpunchIntent'
 INTENTSelect = 'sceneSelectIntent'
 
