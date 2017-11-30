@@ -23,8 +23,8 @@ class BoxingSkillAdaptor(object):
                                             should_end_session=should_end,
                                             plain_text=False)
 
-        print "INTENT", intent_data
-        print "SESSION", session_attributes['meta']
+        # print "INTENT", intent_data
+        # print "SESSION", session_attributes['meta']
 
         return build_response(session_attributes, response)
 

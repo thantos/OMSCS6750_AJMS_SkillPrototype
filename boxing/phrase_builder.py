@@ -22,7 +22,7 @@ def reprompt(gs):
 
 def build(gs):
     prompt = gs[ANNOUNCE]
-    print "PROMPT", prompt
+
     if ANNOUNCEIntro in prompt:
         phrase = build_intro(gs)
         gs[ANNOUNCE] = ANNOUNCEMidround
@@ -34,8 +34,6 @@ def build(gs):
         phrase = build_gameover(gs)
 
     return build_phrase(phrase)
-
-
 
 
 def name(gs, player=True, short=False):
@@ -270,20 +268,22 @@ def healthlow_phrase(name1):
 
 def staminagood_phrase(name1):
     stamina1 = '%s looks fresh.' % name1
-    stamina2 = "%s's preparation is really showing. %s looks very strong out there." % (name1, name1)
-    return choice([stamina1, stamina2])
+    stamina2 = "%s's preparation is really showing." % name1
+    stamina3 = "%s looks very strong out there" % name1
+    return choice([stamina1, stamina2, stamina3])
 
 
 def staminaok_phrase(name1):
     stamina1 = '%s is starting to slow down a bit.' % name1
-    stamina2 = '%s is getting fatigued. All these big punches are starting to wear them down.' % name1
-    return choice([stamina1, stamina2])
+    stamina2 = '%s is getting fatigued.' % name1
+    stamina3 = '%s is losing stamina.' % name1
+    return choice([stamina1, stamina2, stamina3])
 
 
 def staminalow_phrase(name1):
     stamina1 = '%s is dead tired.' % name1
     stamina2 = '%s has nothing left in the tank.' % name1
-    stamina3 = "I'm not sure %s has enough energy to even throw a punch right now." % name1
+    stamina3 = "Does %s hav enough energy to even throw a punch right now?" % name1
     return choice([stamina1, stamina2, stamina3])
 
 
