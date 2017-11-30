@@ -213,3 +213,111 @@ Ship can try to escape battle when damaged or uninterested in combat. First they
 
 #### Logic
 * Escape = B > (BWL + eI)
+
+## Cause and Effect Reporting
+
+An interesting addition would be to make the combat/advancement report interesting. Consider, why did was the ship able to dodge an attack, why were the shields boosted. (Generally because of the crew boosting rooms). We could compare used in calculating game state with the values if the room was or wasn't boosted.
+
+"The attack was avoided due to Lester's quick thinking in the cockpit."
+"The enemy was critically damaged due to Lester's Quick Thinking in the Auto Turret."
+
+Or Negative events:
+
+* "Major damage taken, repairing the shields is of the upmost importance."
+* "We are being hit, I think that a talented captain could avoid these impacts."
+* "Losing life support is damaged, we need it to be repaired."
+
+And general maintenance updates may be required, like:
+
+* "Lester has repaired the Cockpit"
+* "The fire has been extinguished by Lester"
+
+Might consider ranking both positive and negative events by the number of turns it would take to succeed/fail. This won't work for something like dodging, completely missing or not being missed doesn't accumulate. This leads to two categories of effects.
+
+Passive - Does or doesn't have an impact, might not be possible to hit without a manned targeting computer:
+* Dodge
+* Accuracy
+* Intercept
+
+Cumulative - Will this cause lead to more success or failure, life support will fail in X turns, X turns of extra damage will lead to success:
+* Life Support Charge
+* Attack Power
+* Shields
+* Hull Health
+* Warp
+
+Another purpose will be report unnecessary manned station:
+
+* "Captain, we are far out maneuvering the enemy's attempts to avoid our attacks." (Overpowering Dodge)
+* "Life support is fully charged, Lester would be more effective elsewhere." (Don't need life support charge)
+* "Hull to repaired and stable. Lester is looking to be useful elsewhere." (No need for hull maintenance, or the hull is fully repaired while maintenance is manned)
+
+### Negative Levels
+#### Impossible
+It is not possible to do this action.
+
+* Shields - Their attacks overpower the shields no matter the level (Or does this fall into the unnecessary category?)
+* Attack Power - No amount of crew support will improve the attack power to a point where our attacks will bypass their shields.
+* Dodge - We cannot dodge their attacks, their accuracy exceeds our ability to dodge
+* Accuracy - We cannot hit them, no matter if we are manned or not
+
+#### Repair Required Imminent
+When repairing is the only way to stay alive, maybe without maintenance we will (can?) lose remaining hull health next turn. This would be for some value X (2?).
+
+
+#### Manning Required Imminent
+Manning a station could keep us from losing in X turns.
+
+#### Fire Suppression Suggested
+
+### Negative Action
+
+#### Levels
+##### Imminent Need
+When [repairing|manning|fire supression] is the only way to stay alive, maybe without maintenance we will (can?) lose remaining hull health next turn. This would be for some value X (2?). Only for cumulative effects.
+
+* Hull Health - If maintenance isn't [Action], the enemy could destroy us in X turns
+* Shield - If the shields are not [Action], the damage taken will be fatal in X turns
+* Life Support - If life support isn't [Action], will lose in X turns.
+* Intercept - With no tractor beam, the enemy will escape in X turns.
+
+##### Suggested Need
+Cumulative: Like imminent but greater than X. Passive: Without [Action] intended effect cannot be done.
+##### Wasteful
+##### Unnecessary
+
+#### Actions
+##### Repair Station
+##### Man Station
+##### Suppress Fire
+
+#### Effect Levels
+##### Necessary
+##### Important
+##### Trivial
+
+#### Effects
+##### Dodging or Absorbing Attacks
+***Important***
+
+The need to avoid or absorb attacks is import. Damage can be taken for a while, but eventually it will start causing an imminent situation.
+##### Hitting and Causing Damage or Warping
+***Necessary***
+
+If we cannot find a way to cause damage or warp, why even try.
+##### Can Intercept/Intercepting
+***Important***
+
+We likely want to stop the enemy from fleeing.
+##### Maintain Life Support
+***Necessary***
+
+If we cannot maintain life support, we don't keep on living.
+##### Maintain Hull Health
+***Necessary***
+
+If we cannot maintain life support, we don't keep on living.
+
+### Positive Actions
+
+#### Levels
