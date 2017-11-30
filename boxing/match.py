@@ -8,7 +8,7 @@ import phrase_builder
 def random_rounds(n_rounds):
     rounds = []
     for i in range(n_rounds):
-        rounds.append(choice(range(5, 9)))
+        rounds.append(choice([6, 8]))
     return rounds
 
 

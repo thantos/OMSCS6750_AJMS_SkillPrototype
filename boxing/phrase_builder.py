@@ -2,7 +2,7 @@ from boxing_strings import *
 from random import choice, random
 
 BIGHITS = ['argh', 'aooga', 'bada bing bada boom', 'bam', 'bang', 'batter up', 'bazinga', 'beep beep', 'boom', 'booya',
-           'kaching', 'kerbam', 'choo choo', 'ding dong', 'dynomite', 'great scott', 'honk', 'knock knock', 'kerpow',
+           'kaching', 'kerbam', 'choo choo', 'ding dong', 'dynomite', 'honk', 'knock knock', 'kerpow',
            'mamma mia', 'mazel tov', 'oof', 'pow', 'wham', 'whammo']
 DOWNED = ['man overboard', 'ruh roh', 'splash']
 TAUNTS = ['cock a doodle doo', 'neener neener', 'oh snap', 'what a show stopping showboater']
@@ -22,16 +22,20 @@ def reprompt(gs):
 
 def build(gs):
     prompt = gs[ANNOUNCE]
-
+    print "PROMPT", prompt
     if ANNOUNCEIntro in prompt:
         phrase = build_intro(gs)
+        gs[ANNOUNCE] = ANNOUNCEMidround
     elif ANNOUNCEMidround in prompt:
         phrase = build_midround(gs)
     elif ANNOUNCEBetweenRound in prompt:
         phrase = build_betweenround(gs)
     else:
         phrase = build_gameover(gs)
+
     return build_phrase(phrase)
+
+
 
 
 def name(gs, player=True, short=False):
@@ -52,7 +56,7 @@ def build_intro(gs):
     red = name(gs, player=False)
     first_line = "This is Alexa for <say-as interpret-as='"'spell-out'"'>BHO</say-as> sports and I'm here with Siri at the south lake union boxing arena."
     second_line = "In the red corner we have the reigning champion %s." % red
-    third_line = "In the blue corner we have the challenger %s with their new coach. Siri was just telling me that this new coach yells out every single move to %s. Yep, that's right Siri, it is weird to see every jab, hook, and cross called out by a coach. %s relies on the coach to know when to protect his body or keep his hands up or even when to bob and weave. That's right Siri, this is a new era of boxing." % (
+    third_line = "In the blue corner we have the challenger %s with his new coach. Siri was just telling me that this new coach yells out every single move to %s. Yep, that's right Siri, it is weird to see every jab, hook, and cross called out by a coach. %s relies on the coach to know when to protect his body or keep his hands up or even when to bob and weave. That's right Siri, this is a new era of boxing." % (
         blue, blue, blue_short)
     forth_line = "The fight is about to begin. Lets see what this new coach calls out first."
     return ' '.join([first_line, second_line, third_line, forth_line])
@@ -259,7 +263,7 @@ def healthok_phrase(name1):
 
 def healthlow_phrase(name1):
     health1 = '%s is bleeding all over the place.' % name1
-    health2 = 'Can %s even see? Their eyes are almost swollen shut.' % name1
+    health2 = 'Can %s even see? His eyes are almost swollen shut.' % name1
     health3 = '%s looks really rough.' % name1
     return choice([health1, health2, health3])
 
@@ -377,7 +381,7 @@ def notmuchhappening_phrase():
     notmuch3 = 'Not a lot of action right now.'
     notmuch4 = 'The ref is asking the boxers to get to work.'
     notmuch5 = 'The ref is separating the two fighters.'
-    notmuch6 = 'They are looking for an opening.'
+    notmuch6 = 'These guys are looking for an opening.'
     notmuch7 = 'There is a lot of dancing around going on.'
 
     return choice([notmuch1, notmuch2, notmuch3, notmuch4, notmuch5, notmuch6, notmuch7])

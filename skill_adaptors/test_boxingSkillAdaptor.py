@@ -70,7 +70,7 @@ class TestBoxingSkillAdaptor(TestCase):
         response = BoxingSkillAdaptor().on_intent({'name': 'sceneSelectIntent'}, None)
 
         meta = response[SESSION]['meta']
-        self.assertEqual(meta['announce'], 'intro')
+        self.assertEqual(meta['announce'], 'mid round')
 
 
 

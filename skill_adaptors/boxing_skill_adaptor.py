@@ -16,11 +16,15 @@ class BoxingSkillAdaptor(object):
         reprmp = reprompt(session)
         should_end = game_over(session)
         session_attributes = {'scene': 'boxing', 'meta':session}
+
         response = build_speechlet_response("Boxing",
                                             speech,
                                             reprompt_text=reprmp,
                                             should_end_session=should_end,
                                             plain_text=False)
+
+        print "INTENT", intent_data
+        print "SESSION", session_attributes['meta']
 
         return build_response(session_attributes, response)
 
