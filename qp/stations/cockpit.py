@@ -17,4 +17,6 @@ class Cockpit(BaseStation):
     def __init__(self):
         """Construct a Cockpit."""
         super(Cockpit, self). \
-            __init__(STATS.DODGE, self.BASE_VALUE, self.BOOST_MOD)
+            __init__(
+                "COCKPIT", "Cockpit", STATS.DODGE,
+                self.BASE_VALUE, self.BOOST_MOD)

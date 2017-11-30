@@ -63,6 +63,7 @@ def loadScene(scene_name, intent_data, session_attributes):
                     "Select Game",
                     "Select a game: Quick Particle, Boxing, or Tutorial.",
                     None, False))
+        session_attributes = {"scene": scene_name}
 
     scene_data = loadSceneData(scene_name)
 
@@ -207,6 +208,9 @@ def on_intent(intent_request, session):
     intent_name = intent['name']
     attributes = session.get('attributes')
 
+    print("intent", intent)
+    print("session", session)
+
     baseResponse = catchBaseIntent(intent_name)
 
     if baseResponse is not None:
@@ -214,7 +218,11 @@ def on_intent(intent_request, session):
 
     scene = getSceneName(attributes)
 
-    return loadScene(scene, intent, attributes)
+    result = loadScene(scene, intent, attributes)
+
+    print("result", result)
+
+    return result
 
 
 def on_session_ended(session_ended_request, session):

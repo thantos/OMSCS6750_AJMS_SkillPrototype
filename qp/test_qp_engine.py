@@ -148,9 +148,9 @@ class QPEngineAdvanceGeneralTests(TestCase):
         test_crew3: CrewMemberState(test_station4)
     }
     test_stations = {
-        "AutoTurret": StationState(),  # No fire, not damaged
-        "Cockpit": StationState(fire=1),  # fire, not damaged
-        "Shields": StationState(damaged=True)  # No fire, damaged
+        "AUTO_TURRET": StationState(),  # No fire, not damaged
+        "COCKPIT": StationState(fire=1),  # fire, not damaged
+        "SHIELDS": StationState(damaged=True)  # No fire, damaged
     }
 
     def setUp(self):
@@ -166,28 +166,28 @@ class QPEngineAdvanceGeneralTests(TestCase):
             self.test_stations, [])
 
         self.assertDictContainsSubset(
-            STATIONS.get("AutoTurret").handle(False), result)
+            STATIONS.get("AUTO_TURRET").handle(False), result)
 
     def test_should_boost_stat_collected_when_manned(self):
         result = self.undertest._QPEngine__collect_stats_from_stations(
-            self.test_stations, ["AutoTurret"])
+            self.test_stations, ["AUTO_TURRET"])
 
         self.assertDictContainsSubset(
-            STATIONS.get("AutoTurret").handle(True), result)
+            STATIONS.get("AUTO_TURRET").handle(True), result)
 
     def test_should_provide_stats_from_station_on_fire(self):
         result = self.undertest._QPEngine__collect_stats_from_stations(
             self.test_stations, [])
 
         self.assertDictContainsSubset(
-            STATIONS.get("Cockpit").handle(False), result)
+            STATIONS.get("COCKPIT").handle(False), result)
 
     def test_should_not_boost_stats_from_station_on_fire(self):
         result = self.undertest._QPEngine__collect_stats_from_stations(
-            self.test_stations, ["Cockpit"])
+            self.test_stations, ["COCKPIT"])
 
         self.assertDictContainsSubset(
-            STATIONS.get("Cockpit").handle(False), result)
+            STATIONS.get("COCKPIT").handle(False), result)
 
     def test_should_not_provide_stats_when_damaged(self):
         result = self.undertest._QPEngine__collect_stats_from_stations(

@@ -20,7 +20,7 @@ class BaseStationTests(object):
 
     def test_should_exist_in_stations_constant(self):
         """The station should boost the expected stat."""
-        self.assertIsInstance(STATIONS[self.__type.__name__], self.__type)
+        self.assertIsInstance(STATIONS[self.__type().id], self.__type)
 
     def test_should_return_stat(self):
         """The station should boost the expected stat."""

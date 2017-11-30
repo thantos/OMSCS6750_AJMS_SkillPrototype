@@ -9,8 +9,9 @@ class BaseStation(Station):
     can be boosted by some percent.
     """
 
-    def __init__(self, stat, base, boost):
+    def __init__(self, id, name, stat, base, boost):
         """Construct a basic station that changes a single station."""
+        super(BaseStation, self).__init__(id, name)
         self.__stat = stat
         self.__base = base
         self.__boost = boost

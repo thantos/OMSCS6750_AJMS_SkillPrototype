@@ -8,6 +8,6 @@ __station_clases = [AutoTurret, Cockpit, LifeSupport, Shields]
 
 
 """Dictionary of station classes."""
-STATIONS = {station.__name__: station() for station in __station_clases}
+STATIONS = {s.id: s for s in [station() for station in __station_clases]}
 
 __all__ = ['AutoTurret', 'Cockpit', 'LifeSupport', 'Shields', 'STATIONS']

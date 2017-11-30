@@ -17,4 +17,6 @@ class AutoTurret(BaseStation):
     def __init__(self):
         """Construct a Cockpit."""
         super(AutoTurret, self). \
-            __init__(STATS.ATTACK_POWER, self.BASE_VALUE, self.BOOST_MOD)
+            __init__(
+                "AUTO_TURRET", "Auto Turret", STATS.ATTACK_POWER,
+                self.BASE_VALUE, self.BOOST_MOD)

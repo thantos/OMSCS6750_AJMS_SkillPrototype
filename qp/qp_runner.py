@@ -1,18 +1,21 @@
 """QP Runner Module."""
-from qp import QPEngine, CONSTANTS, STATS
+from qp import QPEngine, CONSTANTS, STATS, CREW_MEMBERS
 from state import QPGameState, Ship, StationState, StageState, \
-    CrewMemberState, EnemyState
+    CrewMemberState, EnemyState, GameStateLoader
+from stations import STATIONS
 import random
+from .qp_exceptions import CrewMemberInvalidException, StationInvalidException
 
 
 class QPRunner(object):
     """Logic for playing a game of QP."""
 
-    __starting_stations = ["AutoTurret", "Cockpit", "LifeSupport", "Shields"]
+    __starting_stations = ["AUTO_TURRET", "COCKPIT", "LIFE_SUPPORT", "SHIELDS"]
 
     def __init__(self):
         """Build new QP Runner."""
         self.engine = QPEngine()
+        self.__state_loader = GameStateLoader()
 
     def new_game(self):
         """Create empty game state with no stage."""
@@ -22,7 +25,7 @@ class QPRunner(object):
                     for station in self.__starting_stations},
                 {crew: CrewMemberState()
                     for crew in random.sample(
-                    CONSTANTS.CREW_NAME_POOL,
+                    CREW_MEMBERS.keys(),
                     CONSTANTS.STARTING_CREW_MEMBERS)},
                 {}),  # Leave stats empty for now
             None)
@@ -45,4 +48,25 @@ class QPRunner(object):
         end_game = self.engine.check_for_endgame_states(new_state)
 
     def instruct_crew(self, game_state, crew, station):
-        return self.engine.instruct_crew(game_state, crew, station)
+        """Command a crew member to a station.
+
+        crew -- Crew ID from the skill slot id and the CREW_MEMBER constant.
+        station -- Station ID from the skill slot id.
+        """
+        return (
+            self.engine.instruct_crew(game_state, crew, station),
+            CREW_MEMBERS[crew], STATIONS[station])
+
+    def transform_game_state(self, game_state_dict):
+        """Transform the game state dictionary into QPGameState."""
+        return self.__state_loader.loadGameState(game_state_dict)
+
+    def to_json_friendly(self, obj):
+        if hasattr(obj, '__dict__'):
+            return self.to_json_friendly(obj.__dict__)
+        elif isinstance(obj, list):
+            return [self.to_json_friendly(x) for x in list]
+        elif isinstance(obj, dict):
+            return {k: self.to_json_friendly(v) for (k, v) in obj.iteritems()}
+        else:
+            return obj
