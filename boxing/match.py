@@ -8,7 +8,7 @@ import phrase_builder
 def random_rounds(n_rounds):
     rounds = []
     for i in range(n_rounds):
-        rounds.append(choice([6, 8]))
+        rounds.append(choice([4, 6]))
     return rounds
 
 
@@ -30,7 +30,7 @@ def initialize(game_state):
     game_state[ANNOUNCE] = ANNOUNCEIntro
     game_state[TOPICS] = [[], []]
 
-    # each round is a random length of turns ~ 6 on average
+    # each round is a random length
     game_state[TURNS] = random_rounds(game_state[NUMROUNDS])
     game_state[CURRENTROUND] = 1
     game_state[CURRENTTURN] = 1

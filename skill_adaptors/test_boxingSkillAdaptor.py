@@ -44,7 +44,7 @@ class TestBoxingSkillAdaptor(TestCase):
 
             session['meta'] = meta
 
-        self.assertTrue(meta[OPPONENTHP] <= 0)
+        self.assertTrue(meta[OPPONENTHP] <= 20)
 
     def test_draw(self):
 
@@ -64,6 +64,8 @@ class TestBoxingSkillAdaptor(TestCase):
                 break
 
             session['meta'] = meta
+        self.assertTrue(i < 99)
+
 
     def test_load_game(self):
 
