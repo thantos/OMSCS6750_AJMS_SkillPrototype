@@ -129,11 +129,3 @@ def get_move_from_intent(intent_data):
         move = MOVEjab
 
     return move
-
-
-def get_punch(move_slots):
-    return MOVEuppercut
-
-
-def get_block(move_slots):
-    return MOVEfootwork
