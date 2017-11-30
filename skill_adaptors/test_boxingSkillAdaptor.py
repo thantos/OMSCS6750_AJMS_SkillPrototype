@@ -16,6 +16,8 @@ SESSION = 'sessionAttributes'
 MOVEprotect = 'protects the body'
 ANNOUNCEGameOver = 'game over'
 INTENTSelect = 'sceneSelectIntent'
+PLAYERHISTORY = 'player history'
+
 
 def add_dict_to_session(d, session):
     for key in d:
@@ -26,40 +28,54 @@ def add_dict_to_session(d, session):
 
 class TestBoxingSkillAdaptor(TestCase):
     def test_player_wins(self):
-        uppercut_intent = {INTENTName: INTENTPunch}
+
         unfair_session = {OPPONENTMOVE: MOVEuppercut, PLAYERBONUS: ADsuper, OPPONENTBONUS: ADexhausted}
+        session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
+        for i in range(100):
 
-        session = BoxingSkillAdaptor().on_intent({INTENTName:INTENTSelect}, None)[SESSION]
-        for i in range(10):
-
-            session = BoxingSkillAdaptor().on_intent({INTENTName:INTENTPunch}, session)[SESSION]
+            session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTPunch}, session)[SESSION]
+            meta = session['meta']
 
             # give the player an advantage every round
-            session = add_dict_to_session(unfair_session, session)
+            meta = add_dict_to_session(unfair_session, meta)
 
-            if session[ANNOUNCE] == ANNOUNCEGameOver:
+            if meta[ANNOUNCE] == ANNOUNCEGameOver:
                 break
 
-        self.assertTrue(session[OPPONENTHP] <= 0)
+            session['meta'] = meta
+
+        self.assertTrue(meta[OPPONENTHP] <= 0)
 
     def test_draw(self):
-        uppercut_intent = {INTENTName: MOVEprotect}
+
         player_move = {OPPONENTMOVE: MOVEprotect}
 
-        session = BoxingSkillAdaptor().on_intent({INTENTName:INTENTSelect}, None)[SESSION]
+        session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
         session[OPPONENTMOVE] = MOVEprotect
-        for i in range(10):
 
+        for i in range(100):
             session = BoxingSkillAdaptor().on_intent({INTENTName:INTENTPunch}, session)[SESSION]
+            meta = session['meta']
 
             # give the player an advantage every round
-            session = add_dict_to_session(player_move, session)
+            meta = add_dict_to_session(player_move, meta)
 
-            if session[ANNOUNCE] == ANNOUNCEGameOver:
+            if meta[ANNOUNCE] == ANNOUNCEGameOver:
                 break
+
+            session['meta'] = meta
 
     def test_load_game(self):
 
-        response = BoxingSkillAdaptor().on_intent({'name':'sceneSelectIntent'}, None)
-        first_round_speech = response['response']['outputSpeech']['ssml']
-        self.assertTrue('This is Alexa' in first_round_speech)
+        response = BoxingSkillAdaptor().on_intent({'name': 'sceneSelectIntent'}, None)
+
+        meta = response[SESSION]['meta']
+        self.assertEqual(meta['announce'], 'intro')
+
+
+
+    def test_first_turn_loads(self):
+
+        session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
+        meta = session['meta']
+        self.assertEqual(len(meta[PLAYERHISTORY]), 0)

@@ -4,6 +4,7 @@ from random import choice
 from boxing_strings import *
 import phrase_builder
 
+
 def random_rounds(n_rounds):
     rounds = []
     for i in range(n_rounds):
@@ -89,10 +90,16 @@ def ai_move(game_state):
 
 def update_with_intent(intent_data, session):
     if not session or intent_data['name'] == INTENTSelect:
-        session = initialize({AIType: AIRandom})
+        return new_session_random_ai()
     player_move = get_move_from_intent(intent_data)
     session[PLAYERMOVE] = player_move
     session = update(session)
+    return session
+
+
+def new_session_random_ai():
+    session = initialize({AIType: AIRandom})
+    session['speech'] = phrase_builder.build(session)
     return session
 
 
