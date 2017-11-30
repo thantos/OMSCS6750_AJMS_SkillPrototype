@@ -39,7 +39,6 @@ def initialize(game_state):
 
 
 def update(game_state_prev):
-
     # copy the game state
     game_state = dict(game_state_prev)
 
@@ -105,16 +104,29 @@ def new_session_random_ai():
 
 def get_move_from_intent(intent_data):
     move_name = intent_data.get(INTENTName)
-    move_slots = intent_data.get(INTENTSlots)
 
     if move_name == INTENTUppercut:
         move = MOVEuppercut
     elif move_name == INTENTJab:
         move = MOVEjab
-    elif move_name == INTENTBlock:
-        move = get_block(move_slots)
+    elif move_name == INTENTCross:
+        move = MOVEcross
+    elif move_name == INTENTHook:
+        move = MOVEhook
+    elif move_name == INTENTTaunt:
+        move = MOVEtaunt
+    elif move_name == INTENTFeint:
+        move = MOVEfeint
+    elif move_name == INTENTBob:
+        move = MOVEbob
+    elif move_name == INTENTProtect:
+        move = MOVEprotect
+    elif move_name == INTENTHandsup:
+        move = MOVEhandsup
+    elif move_name == INTENTFootwork:
+        move = MOVEfootwork
     else:
-        move = MOVEuppercut
+        move = MOVEjab
 
     return move
 
