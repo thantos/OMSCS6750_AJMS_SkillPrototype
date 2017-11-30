@@ -3,11 +3,7 @@ from random import choice, random
 
 BIGHITS = ['argh', 'aooga', 'bada bing bada boom', 'bam', 'bang', 'batter up', 'bazinga', 'beep beep', 'boom', 'booya',
            'kaching', 'kerbam', 'choo choo', 'ding dong', 'dynomite', 'honk', 'knock knock', 'kerpow',
-           'mamma mia', 'mazel tov', 'oof', 'pow', 'wham', 'whammo', 'Heavenly day','Hot pot of Coffee!','My stars and garters!',
-           'Well spank me cross eyed!','Well shiver me timbers and call me Woody','Oooooo Man!','Well shoot a rabbit!','Dios mio!',
-           'Why, Heavens to Betsey!','Unbelievable!','Hot diggity','Oh hell shit fire','Shoot a monkey!','Well call me a biscuit.',
-           'Great balls of fire.','Smack my mack!','Give me some sugar','Holey moley!','Thanks!','You best mind me.','knick nack paddy wack',
-           'Crikey','Well slap me silly']
+           'mamma mia', 'mazel tov', 'oof', 'pow', 'wham', 'whammo']
 DOWNED = ['man overboard', 'ruh roh', 'splash']
 TAUNTS = ['cock a doodle doo', 'neener neener', 'oh snap', 'what a show stopping showboater']
 MISSES = ['bon voyage', 'good grief', 'just kidding', 'whoops a daisy', 'wah wah', 'whoosh']
@@ -331,19 +327,9 @@ def sorted_named_topics(gs):
 
 
 def bighit_phrase(name1, name2, gs):
-    move = get_move_from_name(name1, gs)
-
-    hit = choice(BIGHITS)
-    intrj = interjection(hit)
-
-    bighit1 = '%s just laid down the law on %s with a big %s.' % (name1, name2, move)
-    bighit2 = "%s's parents can feel that %s." % (name2, move)
-    bighit3 = 'A big %s from %s will likely send %s to the <say-as interpret-as='"'spell-out'"'>CTE</say-as> protocol tomorrow.' % (
-        move, name1, name2)
-    bighit4 = 'Aw lawdy lawdy what a big %s from %s.' % (move, name1)
-
-    bighit = choice([bighit1, bighit2, bighit3, bighit4])
-    return ' '.join([intrj, bighit])
+    intrj = interjection(choice(BIGHITS))
+    hit = hit_phrase(name1, name2, gs)
+    return ' '.join([intrj, hit])
 
 
 def miss_phrase(name1, name2, gs):
