@@ -3,7 +3,11 @@ from random import choice, random
 
 BIGHITS = ['argh', 'aooga', 'bada bing bada boom', 'bam', 'bang', 'batter up', 'bazinga', 'beep beep', 'boom', 'booya',
            'kaching', 'kerbam', 'choo choo', 'ding dong', 'dynomite', 'honk', 'knock knock', 'kerpow',
-           'mamma mia', 'mazel tov', 'oof', 'pow', 'wham', 'whammo']
+           'mamma mia', 'mazel tov', 'oof', 'pow', 'wham', 'whammo', 'Heavenly day','Hot pot of Coffee!','My stars and garters!',
+           'Well spank me cross eyed!','Well shiver me timbers and call me Woody','Oooooo Man!','Well shoot a rabbit!','Dios mio!',
+           'Why, Heavens to Betsey!','Unbelievable!','Hot diggity','Oh hell shit fire','Shoot a monkey!','Well call me a biscuit.',
+           'Great balls of fire.','Smack my mack!','Give me some sugar','Holey moley!','Thanks!','You best mind me.','knick nack paddy wack',
+           'Crikey','Well slap me silly']
 DOWNED = ['man overboard', 'ruh roh', 'splash']
 TAUNTS = ['cock a doodle doo', 'neener neener', 'oh snap', 'what a show stopping showboater']
 MISSES = ['bon voyage', 'good grief', 'just kidding', 'whoops a daisy', 'wah wah', 'whoosh']
@@ -293,7 +297,8 @@ def boring_phrase():
     boring3 = 'The ref just stepped in to tell the boxers to get to work here.'
     boring4 = 'The match is so slow some of the crowd is leaving.'
     boring5 = 'What a sleeper. Someone needs to throw a punch.'
-    return choice([boring1, boring2, boring3, boring4, boring5])
+    boring6 = "They're off like a herd of turtles!"
+    return choice([boring1, boring2, boring3, boring4, boring5, boring6])
 
 
 def sorted_by_exciting(topics):
