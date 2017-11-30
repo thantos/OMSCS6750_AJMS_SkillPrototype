@@ -132,16 +132,15 @@ def hit_topic(game_state, player=True):
         topics.append(TOPICBlocked)
     elif missed(history):
         topics.append(TOPICMiss)
-
-    if big_hit(history) and not missed(history):
+    elif big_hit(history) and not missed(history):
         topics.append(TOPICBighit)
 
-    if hard_to_hit(op_history):
+    elif hard_to_hit(op_history):
         topics.append(TOPICHardtohit)
 
-    if showboating(history, op_history):
+    elif showboating(history, op_history):
         topics.append(TOPICShowboat)
-    if regular_hit(history) and not big_hit(history):
+    elif regular_hit(history):
         topics.append(TOPICHit)
 
     return topics
