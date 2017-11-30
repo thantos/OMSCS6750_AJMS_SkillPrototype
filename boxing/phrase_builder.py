@@ -227,7 +227,7 @@ def hit_phrase(name, opp_name, gs):
 
 
 def showboat_phrase(name, opp_name):
-    if random() > 0.8:
+    if random() > 0.4:
         taunt = choice(TAUNTS)
         intrj = interjection(taunt)
     else:
@@ -328,11 +328,8 @@ def sorted_named_topics(gs):
 def bighit_phrase(name1, name2, gs):
     move = get_move_from_name(name1, gs)
 
-    if random() > 0.4:
-        hit = choice(BIGHITS)
-        intrj = interjection(hit)
-    else:
-        intrj = ''
+    hit = choice(BIGHITS)
+    intrj = interjection(hit)
 
     bighit1 = '%s just laid down the law on %s with a big %s.' % (name1, name2, move)
     bighit2 = "%s's parents can feel that %s." % (name2, move)
