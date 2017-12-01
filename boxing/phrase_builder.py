@@ -29,7 +29,9 @@ def build(gs):
     elif ANNOUNCEMidround in prompt:
         phrase = build_midround(gs)
     elif ANNOUNCEBetweenRound in prompt:
-        phrase = build_betweenround(gs)
+        phrase = build_midround(gs)
+        phrase += " " + build_betweenround(gs)
+        gs[ANNOUNCE] = ANNOUNCEMidround
     else:
         phrase = build_gameover(gs)
 

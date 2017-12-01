@@ -26,7 +26,7 @@ class TestMoves(TestCase):
             self.assertEqual(gs[ANNOUNCE], ANNOUNCEMidround)
 
         gs = update(gs)
-        self.assertEqual(gs[ANNOUNCE], ANNOUNCEBetweenRound)
+        self.assertEqual(gs[ANNOUNCE], ANNOUNCEMidround)
 
         for i in range(2):
             gs = update(gs)

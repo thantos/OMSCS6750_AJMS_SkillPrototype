@@ -1,22 +1,6 @@
 from boxing_strings import *
 
 
-def prompt(game_state):
-    prompt = ANNOUNCEMidround
-    if game_over(game_state):
-        prompt = ANNOUNCEGameOver
-    elif round_over(game_state):
-        prompt = ANNOUNCEBetweenRound
-        game_state[CURRENTTURN] = 1
-        game_state[CURRENTROUND] += 1
-    else:
-        game_state[CURRENTTURN] += 1
-
-    game_state[ANNOUNCE] = prompt
-
-    return game_state
-
-
 # return two lists - one for player one for opp
 def topics(game_state_prev, game_state):
     player_health = health_topic(game_state_prev, game_state, True)

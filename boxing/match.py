@@ -33,7 +33,7 @@ def initialize(game_state):
     # each round is a random length
     game_state[TURNS] = random_rounds(game_state[NUMROUNDS])
     game_state[CURRENTROUND] = 1
-    game_state[CURRENTTURN] = 1
+    game_state[CURRENTTURN] = 0
 
     return game_state
 
@@ -48,11 +48,46 @@ def update(game_state_prev):
 
     game_state = announcer.topics(game_state_prev, game_state)
 
+    game_state = update_turn(game_state)
+
     game_state['speech'] = phrase_builder.build(game_state)
 
-    game_state = announcer.prompt(game_state)
-
     return game_state
+
+
+def update_turn(gs):
+    turn = gs[CURRENTTURN]
+    round = gs[CURRENTROUND]
+    turns = gs[TURNS]
+
+    if game_over(gs):
+        gs[ANNOUNCE] = ANNOUNCEGameOver
+        return gs
+
+    maxturn = turns[round-1]
+    turn += 1
+
+    if turn == maxturn:
+        gs[ANNOUNCE] = ANNOUNCEBetweenRound
+        turn = 1
+        round += 1
+
+
+    gs[CURRENTROUND] = round
+    gs[CURRENTTURN] = turn
+    return gs
+
+def game_over(gs):
+    hp1 = gs[PLAYERHP]
+    hp2 = gs[OPPONENTHP]
+
+    if hp1 <= 0 or hp2 <= 0:
+        return True
+
+    round = gs[CURRENTROUND]
+    maxround = gs[NUMROUNDS]
+
+    return round > maxround
 
 
 def resolve_turn(game_state):

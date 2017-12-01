@@ -54,7 +54,7 @@ class TestBoxingSkillAdaptor(TestCase):
         session[OPPONENTMOVE] = MOVEprotect
 
         for i in range(100):
-            session = BoxingSkillAdaptor().on_intent({INTENTName:INTENTPunch}, session)[SESSION]
+            session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTPunch}, session)[SESSION]
             meta = session['meta']
 
             # give the player an advantage every round
@@ -66,7 +66,6 @@ class TestBoxingSkillAdaptor(TestCase):
             session['meta'] = meta
         self.assertTrue(i < 99)
 
-
     def test_load_game(self):
 
         response = BoxingSkillAdaptor().on_intent({'name': 'sceneSelectIntent'}, None)
@@ -74,10 +73,25 @@ class TestBoxingSkillAdaptor(TestCase):
         meta = response[SESSION]['meta']
         self.assertEqual(meta['announce'], 'mid round')
 
-
-
     def test_first_turn_loads(self):
 
         session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
         meta = session['meta']
+
         self.assertEqual(len(meta[PLAYERHISTORY]), 0)
+
+
+    def test_before_announces_bell_after_action(self):
+        session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
+        meta = session['meta']
+        meta['turns'] = [2,2,2]
+        session['meta'] = meta
+
+        session = BoxingSkillAdaptor().on_intent({INTENTName: 'uppercutIntent'}, session)[SESSION]
+
+        session = BoxingSkillAdaptor().on_intent({INTENTName: 'uppercutIntent'}, session)[SESSION]
+
+        # requires inpection - should end with the mid round text
+        # print session['meta']['speech']
+
+
