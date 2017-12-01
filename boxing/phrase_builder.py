@@ -28,6 +28,7 @@ def build(gs):
         gs[ANNOUNCE] = ANNOUNCEMidround
     elif ANNOUNCEMidround in prompt:
         phrase = build_midround(gs)
+        phrase += " " + coach_phrase(gs)
     elif ANNOUNCEBetweenRound in prompt:
         phrase = build_midround(gs)
         phrase += " " + build_betweenround(gs)
@@ -375,6 +376,15 @@ def notmuchhappening_phrase():
     notmuch7 = 'There is a lot of dancing around going on.'
 
     return choice([notmuch1, notmuch2, notmuch3, notmuch4, notmuch5, notmuch6, notmuch7])
+
+def coach_phrase(gs):
+    name1 = name(gs, player=True)
+    coach1 = '%s looks to his coach.' % name1
+    coach2 = '%s asks his coach for help.' % name1
+    coach3 = '%s is looking for help from the corner.' % name1
+    coach4 = "%s can't hear his coach." % name1
+    return choice([coach1, coach2, coach3, coach4, ' ', ' '])
+
 
 
 def body_party():
