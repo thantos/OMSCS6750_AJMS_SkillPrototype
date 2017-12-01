@@ -387,9 +387,9 @@ def coach_phrase(gs):
     coach3 = '%s is looking for help from the corner.' % name1
     coach4 = "%s can't hear his coach." % name1
     coach5 = "%s is waiting for his coach to help." % name1
-    coach6 = "What will %s's coach's call out next?" % name1
+    coach6 = "What will %s's coach call out next?" % name1
     coach7 = "What is on %s's coach's mind?" % name1
-    return choice([coach1, coach2, coach3, coach4, coach5, coach6, coach7, ' ', ' '])
+    return choice([coach1, coach2, coach3, coach4, coach5, coach6, coach7])
 
 
 def wrapup_phrase(name1, name2):

@@ -8,7 +8,7 @@ class BoxingSkillAdaptor(object):
 
     def on_intent(self, intent_data, session):
         meta = None
-        if session:
+        if session and 'meta' in session:
             meta = session['meta']
 
         session = update_with_intent(intent_data, meta)
