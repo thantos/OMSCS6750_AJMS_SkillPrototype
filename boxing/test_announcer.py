@@ -28,9 +28,9 @@ class TestMoves(TestCase):
         gs = update(gs)
         self.assertEqual(gs[ANNOUNCE], ANNOUNCEMidround)
 
-        for i in range(2):
-            gs = update(gs)
-            self.assertEqual(gs[ANNOUNCE], ANNOUNCEMidround)
+
+        gs = update(gs)
+        self.assertEqual(gs[ANNOUNCE], ANNOUNCEMidround)
 
         gs = update(gs)
         self.assertEqual(gs[ANNOUNCE], ANNOUNCEGameOver)
@@ -115,3 +115,14 @@ class TestMoves(TestCase):
         p_tpcs7, o_tpcs7 = gs7[TOPICS]
         self.assertEqual(sorted(o_tpcs7), sorted([TOPICHealthlow, TOPICMiss]))
         self.assertEqual(sorted(p_tpcs7), sorted([TOPICBighit]))
+
+    def test_wrap_up(self):
+        gs = initialize({PLAYERMOVE: MOVEwrapup})
+        gs[PLAYERBONUS] = ADsuper
+        gs[OPPONENTMOVE] = MOVEjab
+        gs[OPPONENTBONUS] = ADexhausted  # ensure opp misses
+
+        gs1 = update(gs)
+        p_tpcs, o_tpcs = gs1[TOPICS]
+
+        self.assertEqual(sorted(o_tpcs), sorted([TOPICWrapup, TOPICMiss]))

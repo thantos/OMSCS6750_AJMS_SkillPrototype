@@ -64,7 +64,7 @@ def update_turn(gs):
         gs[ANNOUNCE] = ANNOUNCEGameOver
         return gs
 
-    maxturn = turns[round-1]
+    maxturn = turns[round - 1]
     turn += 1
 
     if turn == maxturn:
@@ -72,10 +72,10 @@ def update_turn(gs):
         turn = 1
         round += 1
 
-
     gs[CURRENTROUND] = round
     gs[CURRENTTURN] = turn
     return gs
+
 
 def game_over(gs):
     hp1 = gs[PLAYERHP]
@@ -87,7 +87,13 @@ def game_over(gs):
     round = gs[CURRENTROUND]
     maxround = gs[NUMROUNDS]
 
-    return round > maxround
+    if round > maxround:
+        return True
+
+    turn = gs[CURRENTTURN] + 1
+    turns = gs[TURNS]
+    if turn >= turns[round - 1] and round >= maxround:
+        return True
 
 
 def resolve_turn(game_state):

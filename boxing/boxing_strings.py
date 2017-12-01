@@ -20,6 +20,8 @@ TOPICShowboat = 'showboat'
 TOPICHardtohit = 'hard to hit'
 TOPICHit = 'hit'
 TOPICBlocked = 'blocked'
+TOPICWrapup = 'wrap up'
+TOPICOnropes = 'on ropes'
 
 # bonus hits should have their own topic - Haymaker etc, bolo punch, rope-a-dope
 

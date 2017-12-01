@@ -114,7 +114,10 @@ def hit_topic(game_state, player=True):
 
     if blocked(history, op_history):
         topics.append(TOPICBlocked)
-    elif missed(history):
+    if wrapped_up(op_history):
+        topics.append(TOPICWrapup)
+
+    if missed(history):
         topics.append(TOPICMiss)
     elif big_hit(history) and not missed(history):
         topics.append(TOPICBighit)
@@ -179,6 +182,11 @@ def blocked(history, op_history):
         if block_move(op_current_move):
             return True
     return False
+
+
+def wrapped_up(op_history):
+    op_current_move, op_current_did_hit = op_history[-1]
+    return op_current_move == MOVEwrapup and op_current_did_hit
 
 
 def attack_move(move):

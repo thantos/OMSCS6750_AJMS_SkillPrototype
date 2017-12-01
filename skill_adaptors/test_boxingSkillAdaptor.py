@@ -18,6 +18,8 @@ ANNOUNCEGameOver = 'game over'
 INTENTSelect = 'sceneSelectIntent'
 PLAYERHISTORY = 'player history'
 
+intents = ['uppercutIntent', 'jabIntent', 'blockpunchIntent', 'footworkIntent', 'crossIntent', 'hookIntent', 'bobIntent', 'tauntIntent', 'protectbodyIntent', 'handsupIntent', 'feintIntent']
+
 
 def add_dict_to_session(d, session):
     for key in d:
@@ -93,3 +95,19 @@ class TestBoxingSkillAdaptor(TestCase):
 
         # requires inpection - should end with the mid round text
         self.assertTrue('bell' in session['meta']['speech'])
+
+    def test_random_game(self):
+        session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
+        for _ in range(2):
+            for i in range(10):
+                meta = session['meta']
+                print meta['speech']
+                if len(meta['player history']) > 0:
+                    print meta['player history'][-1], meta['opponent history'][-1]
+                print
+                session = BoxingSkillAdaptor().on_intent({INTENTName: intents[i]}, session)[SESSION]
+                if session['meta']['announce'] == 'game over':
+                    break
+
+        meta = session['meta']
+        print meta['speech']

@@ -95,6 +95,8 @@ def build_midround(gs):
             phrase = boring_phrase()
         elif topic == TOPICHardtohit:
             phrase = hardtohit_phrase(name1, name2)
+        elif topic == TOPICWrapup:
+            phrase = wrapup_phrase(name1, name2)
 
         midround.append(phrase)
     if len(midround) == 0:
@@ -153,7 +155,7 @@ def decision_phrase(name1, name2, gs):
         lose_score = player_score
 
     if winner == '':
-        end1 = "And that's the final bell. After %d grueling rounds this match ends in a draw. It's all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % rounds
+        end1 = "And that's the final bell. After %d grueling rounds this match ends in a draw. That iss all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % rounds
     else:
         end1 = "And that's the final bell. After %d grueling rounds this match will be decided by the judges. By a score of %d to %d... %s wins the match. It's all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % (
             rounds, win_score, lose_score, winner)
@@ -343,7 +345,7 @@ def miss_phrase(name1, name2, gs):
     miss3 = 'No chance that %s from %s was landing.' % (move, name1)
     miss4 = '%s misses with a %s.' % (name1, move)
     miss5 = '%s misses the %s.' % (name1, move)
-    miss6 = '%s makes em miss.' % name2
+    miss6 = '%s gets out of the way of that %s from %s.' % (name2, move, name1)
     miss7 = 'That %s from %s was way off.' % (move, name1)
     return choice([miss1, miss2, miss3, miss4, miss5, miss6, miss7])
 
@@ -379,12 +381,23 @@ def notmuchhappening_phrase():
 
 
 def coach_phrase(gs):
-    name1 = name(gs, player=True)
-    coach1 = '%s looks to his coach.' % name1
+    name1 = name(gs, player=True, short=True)
+    coach1 = '%s looks to his coach for help.' % name1
     coach2 = '%s asks his coach for help.' % name1
     coach3 = '%s is looking for help from the corner.' % name1
     coach4 = "%s can't hear his coach." % name1
-    return choice([coach1, coach2, coach3, coach4, ' ', ' '])
+    coach5 = "%s is waiting for his coach to help." % name1
+    coach6 = "What will %s's coach's call out next?" % name1
+    coach7 = "What is on %s's coach's mind?" % name1
+    return choice([coach1, coach2, coach3, coach4, coach5, coach6, coach7, ' ', ' '])
+
+
+def wrapup_phrase(name1, name2):
+    wrap1 = '%s wraps up %s.' % (name2, name1)
+    wrap2 = '%s grabs at %s and wraps him up.' % (name2, name1)
+    wrap3 = '%s gets %s up on the ropes.' % (name2, name1)
+    wrap4 = '%s is wrapped up by %s.' % (name1, name2)
+    return choice([wrap1, wrap2, wrap3, wrap4])
 
 
 def body_party():
