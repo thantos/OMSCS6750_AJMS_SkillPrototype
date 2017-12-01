@@ -34,6 +34,9 @@ BASE_STATS = {
 }
 
 
+STARTING_STATIONS = ["AUTO_TURRET", "COCKPIT", "LIFE_SUPPORT", "ENGINES"]
+
+
 class EndGameState(object):
     """Object representing a end game senerio."""
 
@@ -48,3 +51,33 @@ class END_GAME_STATES(object):
     PLAYER_HULL_DESTROYED = EndGameState(True)
     PLAYER_LIFE_SUPPORT_LOSS = EndGameState(True)
     OPPONENT_HULL_DESTROYED = EndGameState(False)
+
+
+CREW_MEMBERS = {
+    "AMY": {
+        "name": "Amy",
+        "id": "AMY"
+    },
+    "JERRI": {
+        "name": "Jerri",
+        "id": "JERRI"
+    },
+    "LESTER": {
+        "name": "Lester",
+        "id": "LESTER"
+    },
+    "MICK": {
+        "name": "Mick",
+        "id": "MICK"
+    },
+    "SAM": {
+        "name": "Sam",
+        "id": "SAM"
+    }
+}
+
+
+class CONSTANTS(object):
+    """Misc constants."""
+
+    STARTING_CREW_MEMBERS = 2

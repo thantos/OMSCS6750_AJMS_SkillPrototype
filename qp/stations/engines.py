@@ -1,13 +1,13 @@
-"""Cockpit Station."""
+"""Engines Station."""
 from .base_station import BaseStation
 from .. qp_constants import STATS
 
 
-class Cockpit(BaseStation):
-    """Cockpit Station.
+class Engines(BaseStation):
+    """Engines Station.
 
-    Working: Provides X to D.
-    Manned: Provides additional D by X%.
+    Working: Provides X W/turn.
+    Manned: Provides additional X% W/turn.
     Damaged: Provides nothing. Cannot Warp.
     """
 
@@ -15,8 +15,8 @@ class Cockpit(BaseStation):
     BOOST_MOD = 1  # TODO
 
     def __init__(self):
-        """Construct a Cockpit."""
-        super(Cockpit, self). \
+        """Construct a Engine Station."""
+        super(Engines, self). \
             __init__(
-                "COCKPIT", "Cockpit", STATS.DODGE,
+                "ENGINES", "Engines", STATS.WARP,
                 self.BASE_VALUE, self.BOOST_MOD)

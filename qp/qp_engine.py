@@ -1,5 +1,5 @@
 """Game Engine for Quick Particle."""
-from state import GameStateLoader, QPGameState, StationState
+from state import QPGameState, StationState
 from .qp_exceptions import CrewMemberInvalidException, \
     StationInvalidException, MemberAlreadyInStationException
 from copy import deepcopy
@@ -13,14 +13,6 @@ class QPEngine(object):
 
     This class should be stateless.
     """
-
-    def __init__(self):
-        """Construct new game engine instance."""
-        self.stateLoader = GameStateLoader()
-
-    def transform_game_state(self, game_state_dict):
-        """Transform the game state dictionary into QPGameState."""
-        return self.game_state_loader.loadGameState(game_state_dict)
 
     def instruct_crew(self, game_state, member, station):
         """Validate a command to tell a crew member to move to a station.

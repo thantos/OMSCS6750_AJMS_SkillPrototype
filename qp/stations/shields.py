@@ -17,4 +17,6 @@ class Shields(BaseStation):
     def __init__(self):
         """Construct a Cockpit."""
         super(Shields, self). \
-            __init__(STATS.SHIELD, self.BASE_VALUE, self.BOOST_MOD)
+            __init__(
+                "SHIELDS", "Shields", STATS.SHIELD,
+                self.BASE_VALUE, self.BOOST_MOD)

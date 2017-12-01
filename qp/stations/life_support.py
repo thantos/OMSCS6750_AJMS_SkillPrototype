@@ -17,4 +17,6 @@ class LifeSupport(BaseStation):
     def __init__(self):
         """Construct a Cockpit."""
         super(LifeSupport, self). \
-            __init__(STATS.LIFE_SUPPORT, self.BASE_VALUE, self.BOOST_MOD)
+            __init__(
+                "LIFE_SUPPORT", "Life Support", STATS.LIFE_SUPPORT,
+                self.BASE_VALUE, self.BOOST_MOD)

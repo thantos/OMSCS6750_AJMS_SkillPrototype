@@ -1,6 +1,7 @@
 """Test the station module."""
 from unittest import TestCase
-from stations import Cockpit, AutoTurret, Shields, LifeSupport, STATIONS
+from stations import Cockpit, AutoTurret, Shields, LifeSupport, STATIONS, \
+    Engines, TargetingComputer, TractorBeam, Maintenance
 from qp import STATS
 
 
@@ -20,7 +21,7 @@ class BaseStationTests(object):
 
     def test_should_exist_in_stations_constant(self):
         """The station should boost the expected stat."""
-        self.assertIsInstance(STATIONS[self.__type.__name__], self.__type)
+        self.assertIsInstance(STATIONS[self.__type().id], self.__type)
 
     def test_should_return_stat(self):
         """The station should boost the expected stat."""
@@ -80,7 +81,7 @@ class LifeSupportTests(BaseStationTests, TestCase):
     """Test Life Support Station."""
 
     def __init__(self, *args, **kwargs):
-        """Pass in Cockpit values."""
+        """Pass in LifeSupport values."""
         super(LifeSupportTests, self).__init__(
             STATS.LIFE_SUPPORT, LifeSupport.BASE_VALUE, LifeSupport.BOOST_MOD,
             LifeSupport
@@ -92,8 +93,54 @@ class ShieldsTests(BaseStationTests, TestCase):
     """Test Shields Station."""
 
     def __init__(self, *args, **kwargs):
-        """Pass in Cockpit values."""
+        """Pass in Shields values."""
         super(ShieldsTests, self).__init__(
             STATS.SHIELD, Shields.BASE_VALUE, Shields.BOOST_MOD, Shields
+        )
+        TestCase.__init__(self, *args, **kwargs)
+
+
+class EnginesTests(BaseStationTests, TestCase):
+    """Test Engines Station."""
+
+    def __init__(self, *args, **kwargs):
+        """Pass in Engines values."""
+        super(EnginesTests, self).__init__(
+            STATS.WARP, Shields.BASE_VALUE, Shields.BOOST_MOD, Engines
+        )
+        TestCase.__init__(self, *args, **kwargs)
+
+
+class TractorBeamTests(BaseStationTests, TestCase):
+    """Test Tractor Beam Station."""
+
+    def __init__(self, *args, **kwargs):
+        """Pass in TractorBeam values."""
+        super(TractorBeamTests, self).__init__(
+            STATS.INTERCEPT, Shields.BASE_VALUE, Shields.BOOST_MOD, TractorBeam
+        )
+        TestCase.__init__(self, *args, **kwargs)
+
+
+class TargetingComputerTests(BaseStationTests, TestCase):
+    """Test TargetingComputer Station."""
+
+    def __init__(self, *args, **kwargs):
+        """Pass in TargetingComputer values."""
+        super(TargetingComputerTests, self).__init__(
+            STATS.ACCURACY, Shields.BASE_VALUE,
+            Shields.BOOST_MOD, TargetingComputer
+        )
+        TestCase.__init__(self, *args, **kwargs)
+
+
+class MaintenanceTests(BaseStationTests, TestCase):
+    """Test Maintenance Station."""
+
+    def __init__(self, *args, **kwargs):
+        """Pass in Maintenance values."""
+        super(MaintenanceTests, self).__init__(
+            STATS.HULL_HEALTH, Shields.BASE_VALUE,
+            Shields.BOOST_MOD, Maintenance
         )
         TestCase.__init__(self, *args, **kwargs)
