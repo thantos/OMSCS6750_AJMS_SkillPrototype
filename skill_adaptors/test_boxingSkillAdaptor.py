@@ -92,8 +92,4 @@ class TestBoxingSkillAdaptor(TestCase):
         session = BoxingSkillAdaptor().on_intent({INTENTName: 'uppercutIntent'}, session)[SESSION]
 
         # requires inpection - should end with the mid round text
-        # print session['meta']['speech']
-
-
-
-
+        self.assertTrue('bell' in session['meta']['speech'])
