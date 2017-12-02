@@ -118,17 +118,22 @@ def bonus(game_state, player=True):
     if player:
         history = game_state[PLAYERHISTORY]
         op_history = game_state[OPPONENTHISTORY]
+        prev_bonus = game_state[PLAYERBONUS]
     else:
         history = game_state[OPPONENTHISTORY]
         op_history = game_state[PLAYERHISTORY]
+        prev_bonus = game_state[OPPONENTBONUS]
 
     player_move, player_hit = history[-1]
     opp_move, opp_hit = op_history[-1]
 
-    if on_fire(history, op_history):
+    if on_fire(history, op_history, prev_bonus):
         return ADOnfire
 
     if heating_up(history, op_history):
+        return ADadvantage
+
+    if blocked_op(history, op_history):
         return ADadvantage
 
     if MOVEuppercut in player_move and player_hit:
@@ -143,13 +148,25 @@ def bonus(game_state, player=True):
     if MOVEjab in player_move:
         return ADNobonus
 
+    if MOVEwrapup in player_move and not attack_move_hit(op_history, 1):
+        return ADadvantage
+
     if opp_hit:
         return ADNobonus
 
     if MOVEtaunt in player_move:
         return ADsuper
 
-    return ADadvantage
+    return ADNobonus
+
+
+def blocked_op(history, op_history):
+    player_move, player_hit = history[-1]
+    op_move, op_hit = op_history[-1]
+
+    op_missed_attack = attack_move(op_move) and not op_hit
+    player_blocked = defense_move(player_move)
+    return op_missed_attack and player_blocked
 
 
 def attack_move_hit(history, index):
@@ -180,12 +197,20 @@ def heating_up(history, op_history):
     return last_two_hit(history) and not successful_attack(op_history, 2)
 
 
-def on_fire(history, op_history):
+def on_fire(history, op_history, prev_bonus):
     if len(history) < 3:
         return False
+
+    # only cool down once you get hit
+    if prev_bonus and not attack_move_hit(op_history, 1):
+        return True
 
     return last_three_hit(history) and not successful_attack(op_history, 3)
 
 
 def attack_move(move):
     return move in [MOVEjab, MOVEuppercut, MOVEcross, MOVEhook]
+
+
+def defense_move(move):
+    return move in [MOVEhandsup, MOVEbob, MOVEfootwork, MOVEprotect]

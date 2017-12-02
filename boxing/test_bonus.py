@@ -34,6 +34,13 @@ class TestBonus(TestCase):
         self.assertEqual(bonus(gs, True), ADsuper)
         self.assertEqual(bonus(gs, False), ADNobonus)
 
+    def test_adv_on_wrapup(self):
+        gs = initialize({})
+        add_to_history(gs, [(MOVEwrapup, True)], player=True)
+        add_to_history(gs, [(MOVEjab, False)], player=False)
+        self.assertEqual(bonus(gs, True), ADadvantage)
+        self.assertEqual(bonus(gs, False), ADNobonus)
+
     def test_bonus_taunt_not_granted(self):
         gs = initialize({})
 
@@ -239,3 +246,63 @@ class TestBonus(TestCase):
 
                         self.assertEqual(bonus(gs, True), ADNobonus)
                         self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_dont_lose_first_until_hit(self):
+
+        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
+        defense_moves = [MOVEbob, MOVEprotect, MOVEfootwork, MOVEhandsup]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    for move4 in defense_moves:
+                        for move5 in defense_moves:
+                            gs = initialize({})
+                            gs[PLAYERBONUS] = ADOnfire
+                            add_to_history(gs,
+                                           [(move, True), (move2, True), (move3, True), (move4, True), (move5, False)],
+                                           player=True)
+                            add_to_history(gs,
+                                           [(move, False), (move2, False), (move3, True), (move4, True), (move5, True)],
+                                           player=False)
+
+                            self.assertEqual(bonus(gs, True), ADOnfire)
+                            self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_dont_lose_first_until_hit2(self):
+
+        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
+        defense_moves = [MOVEbob, MOVEprotect, MOVEfootwork, MOVEhandsup]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    for move4 in defense_moves:
+                        for move5 in attack_moves:
+                            gs = initialize({})
+                            gs[PLAYERBONUS] = ADOnfire
+                            add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, True),
+                                                (move5, False)], player=True)
+                            add_to_history(gs, [(move, False), (move2, False), (move3, True), (move4, True),
+                                                (move5, False)],
+                                           player=False)
+
+                            self.assertEqual(bonus(gs, True), ADOnfire)
+                            self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_dont_lose_first_until_hit3(self):
+
+        attack_moves = [MOVEjab, MOVEhook, MOVEcross, MOVEuppercut]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    for move4 in attack_moves:
+                        for move5 in attack_moves:
+                            gs = initialize({})
+                            gs[PLAYERBONUS] = ADOnfire
+                            add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, True),
+                                                (move5, False)], player=True)
+                            add_to_history(gs, [(move, False), (move2, False), (move3, True), (move4, False),
+                                                (move5, False)],
+                                           player=False)
+
+                            self.assertEqual(bonus(gs, True), ADOnfire)
+                            self.assertEqual(bonus(gs, False), ADNobonus)
