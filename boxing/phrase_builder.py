@@ -5,7 +5,7 @@ BIGHITS = ['argh', 'aooga', 'bada bing bada boom', 'bam', 'bang', 'batter up', '
            'kaching', 'kerbam', 'choo choo', 'ding dong', 'dynomite', 'honk', 'knock knock', 'kerpow',
            'mamma mia', 'mazel tov', 'oof', 'pow', 'wham', 'whammo']
 DOWNED = ['man overboard', 'ruh roh', 'splash']
-TAUNTS = ['cock a doodle doo', 'neener neener', 'oh snap', 'what a show stopping showboater']
+TAUNTS = ['cock a doodle doo', 'neener neener', 'oh snap', 'what a showboat']
 MISSES = ['bon voyage', 'good grief', 'just kidding', 'whoops a daisy', 'wah wah', 'whoosh']
 DANCEMOVES = ['did the moonwalk.', 'did the Hokey-Pokey.', 'did the Hustle.', 'did the charleston.', 'did the robot.',
               'did the twist.', 'did the <say-as interpret-as='"'spell-out'"'>YMCA.</say-as>', 'raised the roof.',
@@ -237,7 +237,7 @@ def showboat_phrase(name, opp_name):
     else:
         intrj = ''
 
-    dance_move = name + ' just ' + choice(DANCEMOVES)
+    dance_move = name + ' just ' + choice(DANCEMOVES) + " to taunt %s." % opp_name
     first_line = ' '.join([intrj, dance_move])
 
     second1 = "I'm sure %s doesn't like being taunted." % opp_name
@@ -311,8 +311,8 @@ def how_to_increase_stamina(name1):
 
 
 def how_to_increase_health(name1):
-    increase_health1 = '%s needs to move around. He is taking too many hits.' % name1
-    increase_health2 = '%s needs to get out of the way of these hits.' % name1
+    increase_health1 = '%s needs to move around.' % name1
+    increase_health2 = '%s needs to work on his footwork.' % name1
     increase_health3 = '%s should try to bob and weave.' % name1
     return choice([increase_health1, increase_health2, increase_health3])
 

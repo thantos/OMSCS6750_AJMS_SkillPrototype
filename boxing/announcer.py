@@ -129,7 +129,7 @@ def hit_topic(game_state, player=True):
         topics.append(TOPICShowboat)
     elif regular_hit(history):
         topics.append(TOPICHit)
-    elif both_block(history, op_history):
+    elif both_block(history, op_history) and player:
         topics.append(TOPICBothblock)
 
     return topics
