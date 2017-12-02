@@ -76,14 +76,3 @@ class TestMoves(TestCase):
             gs = update(gs)
             self.assertEqual(gs[PLAYERBONUS], ADadvantage)
             self.assertEqual(gs[OPPONENTBONUS], ADNobonus)
-
-    # if you throw an uppercut you become disadvantaged
-    def test_uppercut_bonus(self):
-
-        gs = initialize({PLAYERMOVE: MOVEuppercut})
-        for m in self.moves:
-            gs[OPPONENTMOVE] = m
-            gs[OPPONENTBONUS] = ADexhausted  # ensure opp misses
-
-            gs = update(gs)
-            self.assertEqual(gs[PLAYERBONUS], ADdisadvantage)
