@@ -7,10 +7,10 @@ def build_speechlet_response_enahnced(
                                 output, reprompt=None,
                                 card=None, should_end_session=False):
     return {
-        'outputSpeech': output.__dict__,
+        'outputSpeech': tryMergeResponses(output).as_dict(),
         'card': card.__dict__ if card is not None else None,
         'reprompt': {
-            'outputSpeech': reprompt.__dict__
+            'outputSpeech': tryMergeResponses(reprompt).as_dict()
         } if reprompt is not None else None,
         'shouldEndSession': should_end_session
     }
@@ -45,14 +45,41 @@ class PlainResponse(object):
         self.type = "PlainText"
         self.text = text
 
+    def as_dict(self):
+        return self.__dict__
+
 
 class SSMLResponse(object):
 
     def __init__(self, text):
         self.type = "SSML"
-        self.ssml = \
-            "<speak>" + text + "</speak>" \
-            if not text.startswith("<speak>") else text
+        self.text = text
+
+    def as_dict(self):
+        return {
+            "ssml": "<speak>" + self.text + "</speak>",
+            "type": self.type
+        }
+
+
+def tryMergeResponses(responses):
+    if isinstance(responses, list):
+        if len(responses) > 1:
+            return reduce(lambda x, y: mergeResponses(x, y), responses)
+        elif len(responses) == 1:
+            return list[0]
+        else:
+            return None
+    else:  # Not list, maintain single
+        return responses
+
+
+def mergeResponses(resp1, resp2):
+    concat = resp1.text + " " + resp2.text
+    if isinstance(resp1, SSMLResponse) or isinstance(resp2, SSMLResponse):
+        return SSMLResponse(concat)
+    else:
+        return PlainResponse(concat)
 
 
 class SimpleCard(object):
