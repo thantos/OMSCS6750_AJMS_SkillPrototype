@@ -102,8 +102,8 @@ class TestBoxingSkillAdaptor(TestCase):
             for i in range(10):
                 meta = session['meta']
 
-                if len(meta['player history']) > 0:
-                    print meta['player history'][-1], meta['opponent history'][-1]
+                # if len(meta['player history']) > 0:
+                    # print meta['player history'][-1], meta['opponent history'][-1]
                 # print meta['speech']
                 # print
                 session = BoxingSkillAdaptor().on_intent({INTENTName: intents[i]}, session)[SESSION]
