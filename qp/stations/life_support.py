@@ -11,12 +11,12 @@ class LifeSupport(BaseStation):
     Damaged: Provides nothing. (LS will decrease by LSD)
     """
 
-    BASE_VALUE = 1  # TODO
-    BOOST_MOD = 1  # TODO
+    BASE_VALUE = 15  # TODO
+    BOOST_MOD = 15  # TODO
 
     def __init__(self):
         """Construct a Cockpit."""
         super(LifeSupport, self). \
             __init__(
-                "LIFE_SUPPORT", "Life Support", STATS.LIFE_SUPPORT,
+                "LIFE_SUPPORT", "Life Support", STATS.LS_CHARGE,
                 self.BASE_VALUE, self.BOOST_MOD)

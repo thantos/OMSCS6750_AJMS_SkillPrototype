@@ -2,7 +2,8 @@
 from skill_helpers import build_response, \
     build_speechlet_response_enahnced, PlainResponse
 from qp import QPRunner, CREW_MEMBERS, \
-    CrewMemberInvalidException, StationInvalidException, QPContent
+    CrewMemberInvalidException, StationInvalidException, QPContent, STATS, \
+    BASE_STATS, CONSTANTS, STARTING_STATIONS
 from qp.stations import STATIONS
 
 
@@ -22,6 +23,7 @@ class QPSkillAdaptor(object):
                 QPContent.DEFAULT_RESPONSE,
                 card=QPContent.DEFAULT_CARD, should_end_session=True)
         intent_name = intent_data.get("name")
+        end_game = None
 
         # New Game
         if game_state is None or game_state == {}:
@@ -35,21 +37,47 @@ class QPSkillAdaptor(object):
             if intent_name == "crewStateIntent":
                 response = self.__handle_crew_state(slots, state)
             elif intent_name == "goIntent":  # Advance Combat
-                response = build_speechlet_response_enahnced(
-                        QPContent.DEFAULT_RESPONSE,
-                        card=QPContent.DEFAULT_CARD, should_end_session=True)
+                (response, new_game_state, end_game) = \
+                    self.__handle_combat(slots, state)
 
         # TODO this is gross, use immutable objects
         meta["game_state"] = self.__runner.to_json_friendly(new_game_state)
         session["meta"] = meta
 
+        # TODO do more with game end
+        # TODO keep session alive when not lost
         return build_response(session, response)
 
     def __handle_new_game(self):
-        game_state = self.__runner.new_game()
+        """Create a new game.
 
-        # Welcome message, TODO introduce the crew, TODO introduce the stations
+        NOTE: In the future, creating and priming a stage will be separate
+        from creating a new ship.
 
+        Create new ship
+        Create the a new stage
+        Prime the ship's stage persistent status.
+        """
+        game_state = self.__runner.new_game(
+            CONSTANTS.STARTING_CREW_MEMBERS, STARTING_STATIONS)
+
+        # Create a new stage/opponent
+        new_stage = self.__runner.start_stage("Destroyer", {
+            STATS.HULL_HEALTH: 50,
+            STATS.ATTACK_POWER: 5,
+            STATS.DODGE: 2,
+            STATS.SHIELD: 0,
+            STATS.ACCURACY: 4
+        })
+        # Set the stage
+        game_state.stage = new_stage
+
+        # TODO Prime based on ship calculated ship stats,
+        # for now MH and MLS canonot be upgraded
+        game_state.ship.stats = \
+            self.__runner.prime_ship_for_combat(BASE_STATS)
+
+        # Welcome message, introduce the crew, introduce the stations
         crew = [
             CREW_MEMBERS.get(c).get("name")
             for c in game_state.ship.crew.keys()]
@@ -58,7 +86,8 @@ class QPSkillAdaptor(object):
             STATIONS.get(s).name
             for s in game_state.ship.stations.keys()]
 
-        text = QPContent.new_game_response(crew, stations)
+        text = QPContent.new_game_response(
+            crew, stations, new_stage.opponent.name)
 
         response = build_speechlet_response_enahnced(text)
 
@@ -83,6 +112,21 @@ class QPSkillAdaptor(object):
                 QPContent.INSTRUCT_CREW_REPROMPT,
                 card=QPContent.INVALID_INSTRUCTION_CARD)
             return (response, game_state)
+
+    def __handle_combat(self, slots, game_state):
+        (game_state, end_game) = self.__runner.advance_combat(game_state)
+
+        stats = game_state.ship.stats
+
+        return (build_speechlet_response_enahnced(
+            QPContent.report_post_advance_state_response(
+                hull=stats.get(STATS.HULL_HEALTH),
+                ls=stats.get(STATS.LIFE_SUPPORT),
+                warp=stats.get(STATS.WARP),
+                ehull=game_state.stage.opponent.stats.get(STATS.HULL_HEALTH),
+                stations=game_state.ship.stations,
+                end_game=end_game), should_end_session=end_game is not None),
+                game_state, end_game)
 
     def __handle_crew_state(self, slots, game_state):
         crew_id = self.__extract_id_from_slot(slots.get("crewSlot"))

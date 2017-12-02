@@ -11,7 +11,7 @@ class Cockpit(BaseStation):
     Damaged: Provides nothing. Cannot Warp.
     """
 
-    BASE_VALUE = 1  # TODO
+    BASE_VALUE = 2  # TODO
     BOOST_MOD = 1  # TODO
 
     def __init__(self):

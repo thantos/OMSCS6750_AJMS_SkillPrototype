@@ -40,7 +40,7 @@ class BaseStationTests(object):
     def test_should_return_boosted_value(self):
         """A boosted station should apply the boost value."""
         self.assertDictContainsSubset(
-            {self.__stat: self.__base + self.__base * self.__boost},
+            {self.__stat: self.__base + self.__boost},
             self.undertest.handle(True))
 
     def test_should_return_non_0_boosted_value(self):
@@ -83,7 +83,7 @@ class LifeSupportTests(BaseStationTests, TestCase):
     def __init__(self, *args, **kwargs):
         """Pass in LifeSupport values."""
         super(LifeSupportTests, self).__init__(
-            STATS.LIFE_SUPPORT, LifeSupport.BASE_VALUE, LifeSupport.BOOST_MOD,
+            STATS.LS_CHARGE, LifeSupport.BASE_VALUE, LifeSupport.BOOST_MOD,
             LifeSupport
         )
         TestCase.__init__(self, *args, **kwargs)

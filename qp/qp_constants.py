@@ -21,36 +21,38 @@ class STAT_CONSTANTS(object):
     """Constants used by QP."""
 
     FIRE_SUPPRESSION = 2
-    STATION_FIRE_CHANCE = None  # TODO
-    STATION_DAMAGE_CHANCE = None  # TODO
-    LIFE_SUPPORT_DECAY = None  # TODO <0
-    BASE_WAP_LEVEL = None  # TODO >0
+    STATION_FIRE_CHANCE = .5  # TODO
+    STATION_DAMAGE_CHANCE = .2  # TODO
+    LIFE_SUPPORT_DECAY = 15  # TODO <0
+    BASE_WARP_THRESHOLD = None  # TODO >0
 
 
 """Stat values used by all players."""
 BASE_STATS = {
-    STATS.MAX_HULL_HEALTH: 10,  # TODO
-    STATS.MAX_LS: 10  # TODO
+    STATS.MAX_HULL_HEALTH: 100,  # TODO
+    STATS.MAX_LS: 100,  # TODO
+    STATS.ACCURACY: 4
 }
 
 
-STARTING_STATIONS = ["AUTO_TURRET", "COCKPIT", "LIFE_SUPPORT", "ENGINES"]
+STARTING_STATIONS = ["AUTO_TURRET", "COCKPIT", "LIFE_SUPPORT"]  # , "ENGINES"]
 
 
 class EndGameState(object):
     """Object representing a end game senerio."""
 
-    def __init__(self, player_loss):
+    def __init__(self, player_loss, name):
         """Build end game state."""
         self.player_loss = player_loss
+        self.name = name
 
 
 class END_GAME_STATES(object):
     """Collection of possible ways to end combat."""
 
-    PLAYER_HULL_DESTROYED = EndGameState(True)
-    PLAYER_LIFE_SUPPORT_LOSS = EndGameState(True)
-    OPPONENT_HULL_DESTROYED = EndGameState(False)
+    PLAYER_HULL_DESTROYED = EndGameState(True, "Player hull destroyed")
+    PLAYER_LIFE_SUPPORT_LOSS = EndGameState(True, "Player life support loss")
+    OPPONENT_HULL_DESTROYED = EndGameState(False, "Opponent hull destroyed")
 
 
 CREW_MEMBERS = {
