@@ -19,5 +19,5 @@ class BaseStation(Station):
     def handle(self, boost):
         """Provide __stat."""
         return {
-            self.__stat: self.__base * (1 + (self.__boost if boost else 0))
+            self.__stat: self.__base + (self.__boost if boost else 0)
         }

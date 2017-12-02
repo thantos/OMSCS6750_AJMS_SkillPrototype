@@ -336,56 +336,42 @@ class QPEngineCombatTests(TestCase):
         self.assertEquals(result, 0)
 
     def test_attack_should_hit(self):
-        with mock.patch('random.random', lambda: 0):
-            att, dff = self.__build_stats(acc=.1, att=10)
+        with mock.patch('random.randint', lambda s, e: 1):
+            att, dff = self.__build_stats(acc=4, att=10)
             result = \
                 self.undertest._QPEngine__attack(att, dff)
             self.assertEquals(result, 10)
 
     def test_attack_should_hit_at_exact_hit_chance(self):
-        with mock.patch('random.random', lambda: .1):
+        with mock.patch('random.randint', lambda s,e: 10):
             att, dff = self.__build_stats(acc=.1, att=10)
             result = \
                 self.undertest._QPEngine__attack(att, dff)
             self.assertEquals(result, 10)
 
     def test_attack_should_not_hit_at_accuracy_reduce_by_dodge(self):
-        with mock.patch('random.random', lambda: .1):
-            att, dff = self.__build_stats(acc=.1, att=10, ddg=.01)
+        with mock.patch('random.randint', lambda s, e: 10):
+            att, dff = self.__build_stats(acc=1, att=10, ddg=10)
             result = \
                 self.undertest._QPEngine__attack(att, dff)
             self.assertEquals(result, 0)
 
-    def test_attack_can_hit_at_accuracy_reduce_by_dodge(self):
-        with mock.patch('random.random', lambda: .09):
-            att, dff = self.__build_stats(acc=.1, att=10, ddg=.01)
-            result = \
-                self.undertest._QPEngine__attack(att, dff)
-            self.assertEquals(result, 10)
-
-    def test_attack_can_hit_at_accuracy_reduce_by_dodge(self):
-        with mock.patch('random.random', lambda: .09):
-            att, dff = self.__build_stats(acc=.1, att=10, ddg=.01)
-            result = \
-                self.undertest._QPEngine__attack(att, dff)
-            self.assertEquals(result, 10)
-
     def test_attack_should_be_dampended_by_shields(self):
-        with mock.patch('random.random', lambda: 0):
+        with mock.patch('random.randint', lambda s, e: 10):
             att, dff = self.__build_stats(acc=1, att=10, sld=9)
             result = \
                 self.undertest._QPEngine__attack(att, dff)
             self.assertEquals(result, 1)
 
     def test_attack_should_not_be_dampended_by_shields_below_0(self):
-        with mock.patch('random.random', lambda: 0):
+        with mock.patch('random.randint', lambda s,e: 0):
             att, dff = self.__build_stats(acc=1, att=10, sld=11)
             result = \
                 self.undertest._QPEngine__attack(att, dff)
             self.assertEquals(result, 0)
 
     def test_attack_should_treat_missing_acc_as_0(self):
-        with mock.patch('random.random', lambda: 0):
+        with mock.patch('random.randint', lambda s,e: 0):
             att, dff = self.__build_stats()
             result = \
                 self.undertest._QPEngine__attack({
@@ -393,7 +379,7 @@ class QPEngineCombatTests(TestCase):
             self.assertEquals(result, 0)
 
     def test_attack_should_treat_missing_att_as_0(self):
-        with mock.patch('random.random', lambda: 0):
+        with mock.patch('random.randint', lambda s, e: 1):
             att, dff = self.__build_stats()
             result = \
                 self.undertest._QPEngine__attack({
@@ -401,23 +387,23 @@ class QPEngineCombatTests(TestCase):
             self.assertEquals(result, 0)
 
     def test_attack_should_treat_missing_dodge_as_0(self):
-        with mock.patch('random.random', lambda: 0):
-            att, dff = self.__build_stats(acc=.1, att=10)
+        with mock.patch('random.randint', lambda s, e: 1):
+            att, dff = self.__build_stats(acc=1, att=10)
             result = \
                 self.undertest._QPEngine__attack(att, {
                     STATS.SHIELD: 0})
             self.assertEquals(result, 10)
 
     def test_attack_should_treat_missing_shield_as_0(self):
-        with mock.patch('random.random', lambda: 0):
-            att, dff = self.__build_stats(acc=.1, att=10)
+        with mock.patch('random.randint', lambda s, e: 1):
+            att, dff = self.__build_stats(acc=1, att=10)
             result = \
                 self.undertest._QPEngine__attack(att, {
                     STATS.DODGE: 0})
             self.assertEquals(result, 10)
 
     def test_combat_should_involve_both_ships(self):
-        with mock.patch('random.random', lambda: 0):
+        with mock.patch('random.randint', lambda s, e: 1):
             result = \
                 self.undertest._QPEngine__combat({
                     STATS.ATTACK_POWER: 10,

@@ -3,6 +3,7 @@ from lambda_function import *
 import json
 import os.path
 
+
 def response_text(response):
     return response['response']['outputSpeech']['text']
 

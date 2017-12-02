@@ -59,47 +59,51 @@ class QPEngine(object):
             raise ValueError("game_state must be a QPGameState Instance")
 
         state = deepcopy(game_state)
-        opponent = game_state.stage.opponent
+        opponent = state.stage.opponent
 
         manned_stations = self.__get_manned_stations(state.ship.crew)
 
-        # TODO collect stats based on stations
+        # collect stats based on stations
 
         station_stats = \
             self.__collect_stats_from_stations(
                 state.ship.stations, manned_stations)
 
-        # TODO reduce LS by LSD
+        # reduce LS by LSD
 
-        station_stats[STATS.LifeSupport] = \
-            station_stats.get(STATS.LifeSupport, 0) \
-            + STAT_CONSTANTS.LIFE_SUPPORT_DECAY
+        station_stats[STATS.LIFE_SUPPORT] = \
+            station_stats.get(STATS.LS_CHARGE, 0) \
+            - STAT_CONSTANTS.LIFE_SUPPORT_DECAY
 
-        # TODO update stats with the base stats and the station_stats
+        # update stats with the base stats and the station_stats
 
         current_stats = self.__update_stats(BASE_STATS, state.ship.stats)
         current_stats = self.__update_stats(current_stats, station_stats)
 
-        # TODO combat
+        # combat
 
         (damage_player, damage_opponent) = \
             self.__combat(current_stats, opponent.stats)
 
-        # TODO fire and damage to player station
-
-        # TODO advance station states
+        # advance station states
 
         state.ship.stations = \
             self.__advance_stations_state(
-                game_state.ship.stations, manned_stations)
+                state.ship.stations, manned_stations)
 
-        # TODO apply result of combat to stats
+        # TODO fire and damage to player station
 
-        station_stats[STATS.HULL_HEALTH] -= damage_player
+        impact_station = random.choice(state.ship.stations.keys())
+        state.ship.stations[impact_station] = \
+            self.__impact_station(state.ship.stations[impact_station])
+
+        # apply result of combat to stats
+
+        current_stats[STATS.HULL_HEALTH] -= damage_player
         opponent.stats[STATS.HULL_HEALTH] -= damage_opponent
 
         # Store only the persistent stats. All opponent stats are persistent.
-        state.ship.stats = self.__collect_persistent_stats(station_stats)
+        state.ship.stats = self.__collect_persistent_stats(current_stats)
 
         # return
 
@@ -150,14 +154,23 @@ class QPEngine(object):
         attacker_accuracy = attacker_stats.get(STATS.ACCURACY)
         attacker_power = attacker_stats.get(STATS.ATTACK_POWER)
 
-        if attacker_accuracy > 0 and attacker_power > 0:
+        defender_dodge = defender_stats.get(STATS.DODGE, 0)
+        if attacker_accuracy > defender_dodge and attacker_power > 0:
             defender_dodge = defender_stats.get(STATS.DODGE, 0)
-            hit_chance = attacker_accuracy - defender_dodge
-            if hit_chance > 0.0 and random.random() <= hit_chance:
+            hit_roll = random.randint(1, attacker_accuracy)
+            if defender_dodge < hit_roll:
                 defender_shield = defender_stats.get(STATS.SHIELD, 0)
                 damage = attacker_power - defender_shield
                 return max(0, damage)
         return 0
+
+    def __impact_station(self, station):
+        if random.random() < STAT_CONSTANTS.STATION_DAMAGE_CHANCE:
+            return StationState(station.fire, True)
+        elif random.random() < STAT_CONSTANTS.STATION_FIRE_CHANCE:
+            return StationState(max(1, station.fire), station.damaged)
+        else:
+            return station
 
     def __advance_stations_state(self, stations, manned_stations):
         return {

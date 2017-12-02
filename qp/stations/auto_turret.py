@@ -6,13 +6,15 @@ from .. qp_constants import STATS
 class AutoTurret(BaseStation):
     """Auto Turret Station.
 
+    TODO Change attacking to be based on damage range instead of flat damage.
+
     Working: Provides X to P.
     Manned: Provides additional P by X%.
     Damaged: Provides nothing.
     """
 
-    BASE_VALUE = 1  # TODO
-    BOOST_MOD = 1  # TODO
+    BASE_VALUE = 5  # TODO
+    BOOST_MOD = 5  # TODO
 
     def __init__(self):
         """Construct a Cockpit."""

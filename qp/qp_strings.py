@@ -1,5 +1,7 @@
 """QP Common Strings Module."""
 from skill_helpers import PlainResponse, SSMLResponse, SimpleCard
+from stations import STATIONS
+from .qp_constants import END_GAME_STATES
 
 
 class QPContent(object):
@@ -33,12 +35,20 @@ class QPContent(object):
             ", ".join(station_names) + "."
 
     @staticmethod
-    def new_game_response(crew_members, stations):
+    def describe_stage(opponent_name):
+        return "Captain, there is an enemy ship called " + \
+            opponent_name + ". It has begun firing on us." + \
+            " We need to get our crew into position."
+
+    # TODO separate new game, stage, and instructions
+    @staticmethod
+    def new_game_response(crew_members, stations, opponent_name):
         return PlainResponse(
             " ".join([
              QPContent.NEW_GAME_INTRO,
              QPContent.list_crew(crew_members),
              QPContent.list_stations(stations),
+             QPContent.describe_stage(opponent_name),
              QPContent.MOVE_SUGGESTION_TEXT]))
 
     """
@@ -90,3 +100,46 @@ class QPContent(object):
     @staticmethod
     def cs_crew_member_invalid_response(crew_name):
         return PlainResponse(crew_name + " is not in the crew")
+
+    """
+    Advance
+    """
+
+    @staticmethod
+    def report_post_advance_state_response(
+     hull, ls, warp, ehull, stations, end_game):
+        """Ship state, station state, and end_game states."""
+        return PlainResponse(
+            " ".join([s for s in [
+             "The hull has " + str(hull) + " points remaining. ",
+             "The life support is charged to " + str(ls) + ". ",
+             "The warp is charged to " + str(warp) + ". ",
+             "The enemy hull has " + str(ehull) + " points left."] +
+             [QPContent.__adv_station_state(STATIONS.get(id).name, state)
+              for (id, state) in stations.iteritems()]
+             + [QPContent.__report_end_game(end_game)] if s is not None]
+              ))
+
+    @staticmethod
+    def __adv_station_state(station_name, station):
+        if station.fire > 0:
+            if station.damaged:
+                return "Our " + station_name + " is damaged and on fire. "
+            else:
+                return "Our " + station_name + " is on fire. "
+        if station.damaged:
+            return "Our " + station_name + " is damaged."
+        return None
+
+    @staticmethod
+    def __report_end_game(end_game):
+        if end_game == END_GAME_STATES.PLAYER_HULL_DESTROYED:
+            return "The hull has been destroyed, all is lost."
+        if end_game == END_GAME_STATES.PLAYER_LIFE_SUPPORT_LOSS:
+            return "Life support reserves is empty. " + \
+                "The crew breaths its last breath " + \
+                "as cold overtakes the ship."
+        if end_game == END_GAME_STATES.OPPONENT_HULL_DESTROYED:
+            return "The enemy ship bursts apart, the crew lets out a " + \
+                "sigh of relief, then a cheer. On to the next challenge."
+        return None
