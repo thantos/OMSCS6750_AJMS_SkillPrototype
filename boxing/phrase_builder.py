@@ -260,14 +260,20 @@ def healthgood_phrase(name1):
 def healthok_phrase(name1):
     health1 = '%s is taking quite a few hits.' % name1
     health2 = '%s is getting roughed up.' % name1
-    return choice([health1, health2])
+
+    health = choice([health1, health2])
+    increase = how_to_increase_health(name1)
+    return " ".join([health, increase])
 
 
 def healthlow_phrase(name1):
     health1 = '%s is bleeding all over the place.' % name1
     health2 = 'Can %s even see? His eyes are almost swollen shut.' % name1
     health3 = '%s looks really rough.' % name1
-    return choice([health1, health2, health3])
+
+    health = choice([health1, health2, health3])
+    increase = how_to_increase_health(name1)
+    return " ".join([health, increase])
 
 
 def staminagood_phrase(name1):
@@ -281,14 +287,37 @@ def staminaok_phrase(name1):
     stamina1 = '%s is starting to slow down a bit.' % name1
     stamina2 = '%s is getting fatigued.' % name1
     stamina3 = '%s is losing stamina.' % name1
-    return choice([stamina1, stamina2, stamina3])
+
+    stamina = choice([stamina1, stamina2, stamina3])
+    increase = how_to_increase_health(name1)
+    return " ".join([stamina, increase])
 
 
 def staminalow_phrase(name1):
     stamina1 = '%s is dead tired.' % name1
     stamina2 = '%s has nothing left in the tank.' % name1
     stamina3 = "Does %s hav enough energy to even throw a punch right now?" % name1
-    return choice([stamina1, stamina2, stamina3])
+
+    stamina = choice([stamina1, stamina2, stamina3])
+    increase = how_to_increase_health(name1)
+    return " ".join([stamina, increase])
+
+
+def how_to_increase_stamina(name1):
+    increase_stamina1 = '%s should keep his hands up to regain energy.' % name1
+    increase_stamina2 = '%s should protect his body to stop these blows.' % name1
+    increase_stamina3 = '%s should try to wrap him up to rest a bit.' % name1
+    return choice([increase_stamina1, increase_stamina2, increase_stamina3])
+
+
+def how_to_increase_health(name1):
+    increase_health1 = '%s needs to move around. He is taking too many hits.' % name1
+    increase_health2 = '%s needs to get out of the way of these hits.' % name1
+    increase_health3 = '%s should try to bob and weave.' % name1
+    return choice([increase_health1, increase_health2, increase_health3])
+
+
+1
 
 
 def boring_phrase():
