@@ -336,7 +336,7 @@ def boring_phrase():
 
 def sorted_by_exciting(topics):
     # ordered highest excitement to lowest
-    most_exciting_topics = [TOPICBighit, TOPICShowboat, TOPICHardtohit, TOPICHealthlow, TOPICStaminalow, TOPICHit,
+    most_exciting_topics = [TOPICBighit, TOPICShowboat, TOPICHit, TOPICFire, TOPICHeatingup,  TOPICHardtohit, TOPICHealthlow, TOPICStaminalow,
                             TOPICBlocked, TOPICMiss]
 
     # push to the front from least to most exciting

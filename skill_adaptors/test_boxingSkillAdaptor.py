@@ -98,15 +98,19 @@ class TestBoxingSkillAdaptor(TestCase):
 
     def test_random_game(self):
         session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
+        meta = session['meta']
+        meta['player bonus'] = 'super'
+        session['meta'] = meta
         for _ in range(2):
             for i in range(10):
                 meta = session['meta']
 
                 # if len(meta['player history']) > 0:
-                #     print meta['player history'][-1], meta['opponent history'][-1]
+                #     print meta['player history'][-1],  meta['player bonus'], meta['opponent history'][-1], meta['opponent bonus']
                 # print meta['speech']
                 # print
-                session = BoxingSkillAdaptor().on_intent({INTENTName: intents[i]}, session)[SESSION]
+
+                session = BoxingSkillAdaptor().on_intent({INTENTName: 'jabIntent'}, session)[SESSION]
                 if session['meta']['announce'] == 'game over':
                     break
 

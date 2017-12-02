@@ -324,3 +324,13 @@ class TestBonus(TestCase):
         add_to_history(gs, [(MOVEjab, True), (MOVEjab, True), (MOVEjab, True)], player=True)
         add_to_history(gs, [(MOVEjab, False), (MOVEjab, False), (MOVEjab, False)], player=False)
         self.assertEqual(bonus(gs, True), ADNobonus)
+
+    def test_nobody_should_be_onfire(self):
+        gs = initialize({})
+        gs[CURRENTROUND] = 1
+        gs[CURRENTTURN] = 4
+        gs[PLAYERBONUS] = ADOnfire
+        add_to_history(gs, [(MOVEuppercut, False), (MOVEjab, False), (MOVEjab, False), (MOVEfootwork, False)], player=True)
+        add_to_history(gs, [(MOVEfeint, True), (MOVEjab, False), (MOVEhandsup, False), (MOVEuppercut, True)], player=False)
+        self.assertEqual(bonus(gs, True), ADNobonus)
+        self.assertEqual(bonus(gs, False), ADdisadvantage)
