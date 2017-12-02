@@ -25,7 +25,7 @@ def hit(game_state, player=True):
 # if player has disadvantage roll 2 dice and take worst
 # if player has super auto hit
 def hit_success(modifier, bonus, hit_threshold=7):
-    if has_super(bonus):
+    if has_super(bonus) or has_onfire(bonus):
         return True
 
     if has_exhausted(bonus):
@@ -93,6 +93,10 @@ def has_disadvantage(bonus):
 
 def has_super(bonus):
     return ADsuper in bonus
+
+
+def has_onfire(bonus):
+    return ADOnfire in bonus
 
 
 def has_exhausted(bonus):
