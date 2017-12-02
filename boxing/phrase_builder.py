@@ -35,7 +35,7 @@ def build(gs):
         gs[ANNOUNCE] = ANNOUNCEMidround
     else:
         phrase = build_midround(gs)
-        phrase +=  " " + build_gameover(gs)
+        phrase += " " + build_gameover(gs)
 
     return build_phrase(phrase)
 
@@ -405,6 +405,7 @@ def bothblock_phrase(name1, name2):
     block3 = 'It looks like both fighters are defensive.'
     block4 = 'It looks like a block party out there. Everyone is putting up blocks but no punches.'
     return choice([block1, block2, block3, block4])
+
 
 def body_party():
     return choice(['head', 'mouth', 'body', 'face', 'ear', 'chin'])
