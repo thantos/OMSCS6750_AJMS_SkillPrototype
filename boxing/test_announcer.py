@@ -80,7 +80,7 @@ class TestMoves(TestCase):
 
         p_tpcs4, o_tpcs4 = gs4[TOPICS]
         self.assertEqual(sorted(o_tpcs4), sorted([TOPICMiss, TOPICHealthok]))
-        self.assertEqual(p_tpcs4, [TOPICHardtohit, TOPICFire])
+        self.assertTrue(TOPICHardtohit in p_tpcs4)
 
         # regular hit and a miss -
         # opp had three misses = hard to hit other guy is hard to hit
@@ -103,7 +103,8 @@ class TestMoves(TestCase):
 
         p_tpcs6, o_tpcs6 = gs6[TOPICS]
         self.assertEqual(sorted(o_tpcs6), sorted([TOPICMiss]))
-        self.assertEqual(sorted(p_tpcs6), sorted([TOPICBighit, TOPICFire, TOPICStaminaok]))
+        for topic in [TOPICBighit, TOPICStaminaok]:
+            self.assertTrue(topic in p_tpcs6)
 
         # regular hit and a miss -
         # opp had three misses = hard to hit other guy is hard to hit
@@ -114,7 +115,7 @@ class TestMoves(TestCase):
 
         p_tpcs7, o_tpcs7 = gs7[TOPICS]
         self.assertEqual(sorted(o_tpcs7), sorted([TOPICHealthlow, TOPICMiss]))
-        self.assertEqual(sorted(p_tpcs7), sorted([TOPICBighit, TOPICFire]))
+        self.assertTrue(TOPICBighit in p_tpcs7)
 
     def test_wrap_up(self):
         gs = initialize({PLAYERMOVE: MOVEwrapup})

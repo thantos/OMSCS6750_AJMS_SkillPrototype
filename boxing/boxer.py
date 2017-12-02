@@ -127,10 +127,12 @@ def bonus(game_state, player=True):
     player_move, player_hit = history[-1]
     opp_move, opp_hit = op_history[-1]
 
-    if on_fire(history, op_history, prev_bonus):
+    turn = game_state[CURRENTTURN]
+
+    if on_fire(history, op_history, prev_bonus) and turn > 2:
         return ADOnfire
 
-    if heating_up(history, op_history):
+    if heating_up(history, op_history) and turn > 1:
         return ADadvantage
 
     if blocked_op(history, op_history):

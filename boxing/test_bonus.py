@@ -56,6 +56,7 @@ class TestBonus(TestCase):
         for move in attack_moves:
             for move2 in attack_moves:
                 gs = initialize({})
+                gs[CURRENTTURN] = 2
                 add_to_history(gs, [(move, True), (move2, True)], player=True)
                 add_to_history(gs, [(move, False), (move2, False)], player=False)
 
@@ -140,6 +141,7 @@ class TestBonus(TestCase):
                 for move3 in attack_moves:
                     for move4 in attack_moves:
                         gs = initialize({})
+                        gs[CURRENTTURN] = 4
                         add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, True)], player=True)
                         add_to_history(gs, [(move, False), (move2, True), (move3, False), (move4, False)],
                                        player=False)
@@ -155,6 +157,7 @@ class TestBonus(TestCase):
             for move2 in attack_moves:
                 for move3 in attack_moves:
                     gs = initialize({})
+                    gs[CURRENTTURN] = 3
                     add_to_history(gs, [(move, True), (move2, True), (move3, True)], player=True)
                     add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
 
@@ -168,6 +171,7 @@ class TestBonus(TestCase):
             for move2 in attack_moves:
                 for move3 in attack_moves:
                     gs = initialize({})
+                    gs[CURRENTTURN] = 3
                     add_to_history(gs, [(move, True), (move2, True), (move3, False)], player=True)
                     add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
 
@@ -181,6 +185,7 @@ class TestBonus(TestCase):
             for move2 in attack_moves:
                 for move3 in attack_moves:
                     gs = initialize({})
+                    gs[CURRENTTURN] = 3
                     add_to_history(gs, [(move, True), (move2, False), (move3, True)], player=True)
                     add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
 
@@ -195,6 +200,7 @@ class TestBonus(TestCase):
                 for move3 in attack_moves:
                     for move4 in attack_moves:
                         gs = initialize({})
+                        gs[CURRENTTURN] = 4
                         add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, True)], player=True)
                         add_to_history(gs, [(move, False), (move2, False), (move3, False), (move4, False)],
                                        player=False)
@@ -210,6 +216,7 @@ class TestBonus(TestCase):
                 for move3 in attack_moves:
                     for move4 in attack_moves:
                         gs = initialize({})
+                        gs[CURRENTTURN] = 4
                         add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, False)], player=True)
                         add_to_history(gs, [(move, False), (move2, False), (move3, False), (move4, False)],
                                        player=False)
@@ -257,6 +264,7 @@ class TestBonus(TestCase):
                     for move4 in defense_moves:
                         for move5 in defense_moves:
                             gs = initialize({})
+                            gs[CURRENTTURN] = 5
                             gs[PLAYERBONUS] = ADOnfire
                             add_to_history(gs,
                                            [(move, True), (move2, True), (move3, True), (move4, True), (move5, False)],
@@ -278,6 +286,7 @@ class TestBonus(TestCase):
                     for move4 in defense_moves:
                         for move5 in attack_moves:
                             gs = initialize({})
+                            gs[CURRENTTURN] = 5
                             gs[PLAYERBONUS] = ADOnfire
                             add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, True),
                                                 (move5, False)], player=True)
@@ -297,6 +306,7 @@ class TestBonus(TestCase):
                     for move4 in attack_moves:
                         for move5 in attack_moves:
                             gs = initialize({})
+                            gs[CURRENTTURN] = 5
                             gs[PLAYERBONUS] = ADOnfire
                             add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, True),
                                                 (move5, False)], player=True)
@@ -306,3 +316,11 @@ class TestBonus(TestCase):
 
                             self.assertEqual(bonus(gs, True), ADOnfire)
                             self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_lose_fire_after_bell(self):
+        gs = initialize({})
+        gs[CURRENTROUND] = 2
+        gs[PLAYERBONUS] = ADOnfire
+        add_to_history(gs, [(MOVEjab, True), (MOVEjab, True), (MOVEjab, True)], player=True)
+        add_to_history(gs, [(MOVEjab, False), (MOVEjab, False), (MOVEjab, False)], player=False)
+        self.assertEqual(bonus(gs, True), ADNobonus)
