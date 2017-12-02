@@ -129,8 +129,16 @@ def hit_topic(game_state, player=True):
         topics.append(TOPICShowboat)
     elif regular_hit(history):
         topics.append(TOPICHit)
+    elif both_block(history, op_history):
+        topics.append(TOPICBothblock)
 
     return topics
+
+
+def both_block(history, op_history):
+    current_move, current_did_hit = history[-1]
+    op_current_move, op_current_did_hit = op_history[-1]
+    return block_move(current_move) and block_move(op_current_move)
 
 
 def missed(history):

@@ -21,7 +21,7 @@ TOPICHardtohit = 'hard to hit'
 TOPICHit = 'hit'
 TOPICBlocked = 'blocked'
 TOPICWrapup = 'wrap up'
-TOPICOnropes = 'on ropes'
+TOPICBothblock = 'both block'
 
 # bonus hits should have their own topic - Haymaker etc, bolo punch, rope-a-dope
 

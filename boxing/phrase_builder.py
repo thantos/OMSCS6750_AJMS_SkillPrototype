@@ -34,7 +34,8 @@ def build(gs):
         phrase += " " + build_betweenround(gs)
         gs[ANNOUNCE] = ANNOUNCEMidround
     else:
-        phrase = build_gameover(gs)
+        phrase = build_midround(gs)
+        phrase +=  " " + build_gameover(gs)
 
     return build_phrase(phrase)
 
@@ -97,6 +98,8 @@ def build_midround(gs):
             phrase = hardtohit_phrase(name1, name2)
         elif topic == TOPICWrapup:
             phrase = wrapup_phrase(name1, name2)
+        elif topic == TOPICBothblock:
+            phrase = bothblock_phrase(name1, name2)
 
         midround.append(phrase)
     if len(midround) == 0:
@@ -147,18 +150,14 @@ def decision_phrase(name1, name2, gs):
     winner = ''
     if player_score > op_score:
         winner = name1
-        win_score = player_score
-        lose_score = op_score
     if op_score > player_score:
         winner = name2
-        win_score = op_score
-        lose_score = player_score
 
     if winner == '':
         end1 = "And that's the final bell. After %d grueling rounds this match ends in a draw. That iss all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % rounds
     else:
-        end1 = "And that's the final bell. After %d grueling rounds this match will be decided by the judges. By a score of %d to %d... %s wins the match. It's all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % (
-            rounds, win_score, lose_score, winner)
+        end1 = "And that's the final bell. After %d grueling rounds this match will be decided by the judges. By a score of %d to %d... %s wins the match. That is all she wrote. Thanks for joining me and Siri here in south lake union. Please tune in next time." % (
+            rounds, player_score, op_score, winner)
 
     return end1
 
@@ -399,6 +398,13 @@ def wrapup_phrase(name1, name2):
     wrap4 = '%s is wrapped up by %s.' % (name1, name2)
     return choice([wrap1, wrap2, wrap3, wrap4])
 
+
+def bothblock_phrase(name1, name2):
+    block1 = 'These fighters are playing it safe.'
+    block2 = 'Both fighters are scared to throw punches.'
+    block3 = 'It looks like both fighters are defensive.'
+    block4 = 'It looks like a block party out there. Everyone is putting up blocks but no punches.'
+    return choice([block1, block2, block3, block4])
 
 def body_party():
     return choice(['head', 'mouth', 'body', 'face', 'ear', 'chin'])
