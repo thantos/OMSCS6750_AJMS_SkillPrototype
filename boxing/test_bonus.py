@@ -73,49 +73,6 @@ class TestBonus(TestCase):
                 self.assertEqual(bonus(gs, True), ADNobonus)
                 self.assertEqual(bonus(gs, False), ADNobonus)
 
-    def test_on_fire(self):
-
-        # advantage for two hits in a row
-        attack_moves = [MOVEjab, MOVEhook, MOVEuppercut, MOVEcross]
-        for move in attack_moves:
-            for move2 in attack_moves:
-                for move3 in attack_moves:
-                    gs = initialize({})
-                    add_to_history(gs, [(move, True), (move2, True), (move3, True)], player=True)
-                    add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
-
-                    self.assertEqual(bonus(gs, True), ADOnfire)
-                    self.assertEqual(bonus(gs, False), ADNobonus)
-
-    def test_not_on_fire1(self):
-
-        # advantage for two hits in a row
-        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
-        for move in attack_moves:
-            for move2 in attack_moves:
-                for move3 in attack_moves:
-                    gs = initialize({})
-                    add_to_history(gs, [(move, True), (move2, True), (move3, False)], player=True)
-                    add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
-
-                    self.assertEqual(bonus(gs, True), ADNobonus)
-                    self.assertEqual(bonus(gs, False), ADNobonus)
-
-    def test_not_on_fire2(self):
-
-        # advantage for two hits in a row
-        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
-        for move in attack_moves:
-            for move2 in attack_moves:
-                for move3 in attack_moves:
-                    gs = initialize({})
-                    add_to_history(gs, [(move, True), (move2, False), (move3, True)], player=True)
-                    add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
-
-                    self.assertEqual(bonus(gs, True), ADNobonus)
-                    self.assertEqual(bonus(gs, False), ADNobonus)
-
-
     def test_heating_up_three(self):
 
         # advantage for two hits in a row
@@ -129,3 +86,73 @@ class TestBonus(TestCase):
 
                     self.assertEqual(bonus(gs, True), ADadvantage)
                     self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_on_fire(self):
+
+        # on fire when you land three
+        attack_moves = [MOVEjab, MOVEhook, MOVEuppercut, MOVEcross]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    gs = initialize({})
+                    add_to_history(gs, [(move, True), (move2, True), (move3, True)], player=True)
+                    add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
+
+                    self.assertEqual(bonus(gs, True), ADOnfire)
+                    self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_not_on_fire1(self):
+
+        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    gs = initialize({})
+                    add_to_history(gs, [(move, True), (move2, True), (move3, False)], player=True)
+                    add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
+
+                    self.assertEqual(bonus(gs, True), ADNobonus)
+                    self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_not_on_fire2(self):
+
+        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    gs = initialize({})
+                    add_to_history(gs, [(move, True), (move2, False), (move3, True)], player=True)
+                    add_to_history(gs, [(move, False), (move2, False), (move3, False)], player=False)
+
+                    self.assertEqual(bonus(gs, True), ADNobonus)
+                    self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_stay_on_fire(self):
+
+        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    for move4 in attack_moves:
+                        gs = initialize({})
+                        add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, True)], player=True)
+                        add_to_history(gs, [(move, False), (move2, False), (move3, False), (move4, False)],
+                                       player=False)
+
+                        self.assertEqual(bonus(gs, True), ADOnfire)
+                        self.assertEqual(bonus(gs, False), ADNobonus)
+
+    def test_lose_fire(self):
+
+        attack_moves = [MOVEjab, MOVEhook, MOVEcross]
+        for move in attack_moves:
+            for move2 in attack_moves:
+                for move3 in attack_moves:
+                    for move4 in attack_moves:
+                        gs = initialize({})
+                        add_to_history(gs, [(move, True), (move2, True), (move3, True), (move4, False)], player=True)
+                        add_to_history(gs, [(move, False), (move2, False), (move3, False), (move4, False)],
+                                       player=False)
+
+                        self.assertEqual(bonus(gs, True), ADNobonus)
+                        self.assertEqual(bonus(gs, False), ADNobonus)
