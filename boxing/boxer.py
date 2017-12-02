@@ -112,13 +112,22 @@ def random_move():
 
 def bonus(game_state, player=True):
     if player:
-        player_move, player_hit = game_state[PLAYERHISTORY][-1]
-        opp_move, opp_hit = game_state[OPPONENTHISTORY][-1]
+        history = game_state[PLAYERHISTORY]
+        op_history = game_state[OPPONENTHISTORY]
     else:
-        player_move, player_hit = game_state[OPPONENTHISTORY][-1]
-        opp_move, opp_hit = game_state[PLAYERHISTORY][-1]
+        history = game_state[OPPONENTHISTORY]
+        op_history = game_state[PLAYERHISTORY]
 
-    if MOVEuppercut in player_move:
+    player_move, player_hit = history[-1]
+    opp_move, opp_hit = op_history[-1]
+
+    if on_fire(history):
+        return ADOnfire
+
+    if heating_up(history):
+        return ADadvantage
+
+    if MOVEuppercut in player_move and player_hit:
         return ADdisadvantage
 
     if MOVEhook in player_move:
@@ -137,3 +146,32 @@ def bonus(game_state, player=True):
         return ADsuper
 
     return ADadvantage
+
+
+# heating up when the last two punches land
+def heating_up(history):
+    if len(history) < 2:
+        return False
+
+    move, hit = history[-1]
+    prev_move, prev_hit = history[-2]
+
+    two_attacks = attack_move(move) and attack_move(prev_move)
+    two_hits = hit and prev_hit
+    return two_attacks and two_hits
+
+
+def on_fire(history):
+    if len(history) < 3:
+        return False
+
+    move, hit = history[-1]
+    prev_move, prev_hit = history[-2]
+    prev_prev_move, prev_prev_hit = history[-3]
+    three_attacks = attack_move(move) and attack_move(prev_move) and attack_move(prev_prev_move)
+    three_hits = hit and prev_hit and prev_prev_hit
+    return three_attacks and three_hits
+
+
+def attack_move(move):
+    return move in [MOVEjab, MOVEuppercut, MOVEcross, MOVEhook]

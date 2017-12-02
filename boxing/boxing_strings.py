@@ -58,6 +58,7 @@ MOVEprotect = 'protects the body'
 ADadvantage = 'adv'
 ADdisadvantage = 'dis'
 ADsuper = 'super'
+ADOnfire = 'fire'
 ADexhausted = 'exhausted'
 ADNobonus = 'no bonus'
 
