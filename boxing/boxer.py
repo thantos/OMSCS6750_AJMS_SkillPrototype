@@ -20,7 +20,7 @@ def hit(game_state, player=True):
     return does_hit, player_delta, opp_delta
 
 
-# roll a 20 sided dice return true if dice > threshol
+# roll a 20 sided dice return true if dice > threshold
 # if player has advantage roll 2 dice and take best
 # if player has disadvantage roll 2 dice and take worst
 # if player has super auto hit
