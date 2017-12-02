@@ -121,10 +121,10 @@ def bonus(game_state, player=True):
     player_move, player_hit = history[-1]
     opp_move, opp_hit = op_history[-1]
 
-    if on_fire(history):
+    if on_fire(history, op_history):
         return ADOnfire
 
-    if heating_up(history):
+    if heating_up(history, op_history):
         return ADadvantage
 
     if MOVEuppercut in player_move and player_hit:
@@ -148,29 +148,39 @@ def bonus(game_state, player=True):
     return ADadvantage
 
 
+def attack_move_hit(history, index):
+    move, hit = history[-index]
+    return attack_move(move) and hit
+
+
+def last_two_hit(history):
+    return attack_move_hit(history, 1) and attack_move_hit(history, 2)
+
+
+def last_three_hit(history):
+    return last_two_hit(history) and attack_move_hit(history, 3)
+
+
+def successful_attack(history, last_n_turns):
+    for n in range(last_n_turns):
+        if attack_move_hit(history, n + 1):
+            return True
+    return False
+
+
 # heating up when the last two punches land
-def heating_up(history):
+def heating_up(history, op_history):
     if len(history) < 2:
         return False
 
-    move, hit = history[-1]
-    prev_move, prev_hit = history[-2]
-
-    two_attacks = attack_move(move) and attack_move(prev_move)
-    two_hits = hit and prev_hit
-    return two_attacks and two_hits
+    return last_two_hit(history) and not successful_attack(op_history, 2)
 
 
-def on_fire(history):
+def on_fire(history, op_history):
     if len(history) < 3:
         return False
 
-    move, hit = history[-1]
-    prev_move, prev_hit = history[-2]
-    prev_prev_move, prev_prev_hit = history[-3]
-    three_attacks = attack_move(move) and attack_move(prev_move) and attack_move(prev_prev_move)
-    three_hits = hit and prev_hit and prev_prev_hit
-    return three_attacks and three_hits
+    return last_three_hit(history) and not successful_attack(op_history, 3)
 
 
 def attack_move(move):

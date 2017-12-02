@@ -18,7 +18,8 @@ ANNOUNCEGameOver = 'game over'
 INTENTSelect = 'sceneSelectIntent'
 PLAYERHISTORY = 'player history'
 
-intents = ['uppercutIntent', 'jabIntent', 'blockpunchIntent', 'footworkIntent', 'crossIntent', 'hookIntent', 'bobIntent', 'tauntIntent', 'protectbodyIntent', 'handsupIntent', 'feintIntent']
+intents = ['uppercutIntent', 'jabIntent', 'blockpunchIntent', 'footworkIntent', 'crossIntent', 'hookIntent',
+           'bobIntent', 'tauntIntent', 'protectbodyIntent', 'handsupIntent', 'feintIntent']
 
 
 def add_dict_to_session(d, session):
@@ -82,11 +83,10 @@ class TestBoxingSkillAdaptor(TestCase):
 
         self.assertEqual(len(meta[PLAYERHISTORY]), 0)
 
-
     def test_before_announces_bell_after_action(self):
         session = BoxingSkillAdaptor().on_intent({INTENTName: INTENTSelect}, None)[SESSION]
         meta = session['meta']
-        meta['turns'] = [2,2,2]
+        meta['turns'] = [2, 2, 2]
         session['meta'] = meta
 
         session = BoxingSkillAdaptor().on_intent({INTENTName: 'uppercutIntent'}, session)[SESSION]
@@ -103,12 +103,12 @@ class TestBoxingSkillAdaptor(TestCase):
                 meta = session['meta']
 
                 # if len(meta['player history']) > 0:
-                    # print meta['player history'][-1], meta['opponent history'][-1]
+                # print meta['player history'][-1], meta['opponent history'][-1]
                 # print meta['speech']
                 # print
                 session = BoxingSkillAdaptor().on_intent({INTENTName: intents[i]}, session)[SESSION]
                 if session['meta']['announce'] == 'game over':
                     break
 
-        # meta = session['meta']
-        # print meta['speech']
+                    # meta = session['meta']
+                    # print meta['speech']
