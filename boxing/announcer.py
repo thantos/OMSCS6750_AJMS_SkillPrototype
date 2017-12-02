@@ -117,7 +117,7 @@ def hit_topic(game_state, player=True):
     if wrapped_up(op_history):
         topics.append(TOPICWrapup)
 
-    if missed(history):
+    if missed(history) and not blocked(history, op_history):
         topics.append(TOPICMiss)
     elif big_hit(history) and not missed(history):
         topics.append(TOPICBighit)
