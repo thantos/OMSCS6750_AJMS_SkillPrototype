@@ -6,12 +6,16 @@ def topics(game_state_prev, game_state):
     player_health = health_topic(game_state_prev, game_state, True)
     player_stamina = stamina_topic(game_state_prev, game_state, True)
     player_hits = hit_topic(game_state, True)
-    player_topics = player_health + player_stamina + player_hits
+    player_fire = on_fire_topic(game_state, True)
+
+    player_topics = player_health + player_stamina + player_hits + player_fire
 
     op_health = health_topic(game_state_prev, game_state, False)
     op_stamina = stamina_topic(game_state_prev, game_state, False)
     op_hits = hit_topic(game_state, False)
-    op_topics = op_health + op_stamina + op_hits
+    op_fire = on_fire_topic(game_state, False)
+
+    op_topics = op_health + op_stamina + op_hits + op_fire
 
     game_state[TOPICS] = [player_topics, op_topics]
     return game_state
@@ -195,6 +199,17 @@ def blocked(history, op_history):
 def wrapped_up(op_history):
     op_current_move, op_current_did_hit = op_history[-1]
     return op_current_move == MOVEwrapup and op_current_did_hit
+
+def on_fire_topic(gs, player):
+    if player:
+        bonus = gs[PLAYERBONUS]
+    else:
+        bonus = gs[OPPONENTBONUS]
+
+    on_fire = []
+    if bonus == ADOnfire:
+        on_fire = [TOPICFire]
+    return on_fire
 
 
 def attack_move(move):
