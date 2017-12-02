@@ -1,5 +1,5 @@
 from boxing_strings import *
-
+import boxer
 
 # return two lists - one for player one for opp
 def topics(game_state_prev, game_state):
@@ -203,12 +203,19 @@ def wrapped_up(op_history):
 def on_fire_topic(gs, player):
     if player:
         bonus = gs[PLAYERBONUS]
+        history = gs[PLAYERHISTORY]
+        op_history = gs[OPPONENTHISTORY]
     else:
         bonus = gs[OPPONENTBONUS]
+        history = gs[OPPONENTHISTORY]
+        op_history = gs[PLAYERHISTORY]
 
     on_fire = []
     if bonus == ADOnfire:
         on_fire = [TOPICFire]
+    elif boxer.heating_up(history, op_history):
+        on_fire = [TOPICHeatingup]
+
     return on_fire
 
 

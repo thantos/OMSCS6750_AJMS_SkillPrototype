@@ -69,7 +69,7 @@ class TestMoves(TestCase):
 
         p_tpcs3, o_tpcs3 = gs3[TOPICS]
         self.assertEqual(o_tpcs3, [TOPICMiss])
-        self.assertEqual(p_tpcs3, [TOPICHit])
+        self.assertEqual(p_tpcs3, [TOPICHit, TOPICHeatingup])
 
         # regular hit and a miss -
         # opp had three misses = hard to hit other guy is hard to hit
