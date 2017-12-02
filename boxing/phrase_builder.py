@@ -198,7 +198,7 @@ def score_move(move, did_hit):
 
 
 def build_phrase(phrase):
-    return '<speak>%s</speak>' % phrase
+    return '%s' % phrase
 
 
 def interjection(word):
