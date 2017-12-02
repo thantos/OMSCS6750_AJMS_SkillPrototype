@@ -100,6 +100,10 @@ def build_midround(gs):
             phrase = wrapup_phrase(name1, name2)
         elif topic == TOPICBothblock:
             phrase = bothblock_phrase(name1, name2)
+        elif topic == TOPICHeatingup:
+            phrase = heatingup_phrase(name1)
+        elif topic == TOPICFire:
+            phrase = onfire_phrase(name1)
 
         midround.append(phrase)
     if len(midround) == 0:
@@ -434,6 +438,20 @@ def bothblock_phrase(name1, name2):
     block3 = 'It looks like both fighters are defensive.'
     block4 = 'It looks like a block party out there. Everyone is putting up blocks but no punches.'
     return choice([block1, block2, block3, block4])
+
+
+def heatingup_phrase(name1):
+    heating1 = '%s is heating up.' % name1
+    heating2 = 'Lookout Siri, %s is heating up.' % name1
+    return choice([heating1, heating2])
+
+def onfire_phrase(name1):
+    onfire1 = '%s is on fire!' % name1
+    onfire2 = 'Whoa! %s is buring up!' % name1
+    onfire3 = '%s is super hot!' % name1
+    onfire4 = "%s can't miss!" % name1
+    return choice([onfire1, onfire2, onfire3, onfire4])
+
 
 
 def body_party():
