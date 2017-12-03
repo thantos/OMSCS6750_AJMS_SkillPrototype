@@ -88,3 +88,18 @@ class SimpleCard(object):
         self.type = "Simple"
         self.content = text
         self.title = title
+
+
+"""Utils"""
+
+
+def handle_text_list(text, useOr=False):
+    if len(text) == 0:
+        return ""
+    if len(text) == 1:
+        return text[0]
+    f = "or" if useOr else "and"
+    if len(text) == 2:
+        return (" " + f + " ").join(text)
+    return ", ".join(text[:len(text)-1]) + \
+        ", " + f + " " + text[-1]

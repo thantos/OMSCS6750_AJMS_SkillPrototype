@@ -6,6 +6,7 @@ from copy import deepcopy
 from stations import STATIONS
 from .qp_constants import STATS, STAT_CONSTANTS, END_GAME_STATES, BASE_STATS
 import random
+from .qp_result_engine import QPResultEngine
 
 
 class QPEngine(object):
@@ -13,6 +14,8 @@ class QPEngine(object):
 
     This class should be stateless.
     """
+    def __init__(self):
+        self.result_engine = QPResultEngine()
 
     def instruct_crew(self, game_state, member, station):
         """Validate a command to tell a crew member to move to a station.
@@ -58,8 +61,13 @@ class QPEngine(object):
         if type(game_state) is not QPGameState:
             raise ValueError("game_state must be a QPGameState Instance")
 
+        qp_results = []
+
         state = deepcopy(game_state)
-        opponent = state.stage.opponent
+        opponent = deepcopy(state.stage.opponent)
+        starting_stats = game_state.ship.stats
+        starting_opponent_stats = state.stage.opponent.stats
+        start_stations = state.ship.stations
 
         manned_stations = self.__get_manned_stations(state.ship.crew)
 
@@ -67,7 +75,7 @@ class QPEngine(object):
 
         station_stats = \
             self.__collect_stats_from_stations(
-                state.ship.stations, manned_stations)
+                start_stations, manned_stations)
 
         # reduce LS by LSD
 
@@ -87,27 +95,35 @@ class QPEngine(object):
 
         # advance station states
 
-        state.ship.stations = \
-            self.__advance_stations_state(
-                state.ship.stations, manned_stations)
+        advanced_stations = \
+            self.__advance_stations_state(start_stations, manned_stations)
 
-        # TODO fire and damage to player station
+        # fire and damage to player station
+        impact_station = random.choice(advanced_stations.keys())
+        final_stations = deepcopy(advanced_stations)
+        final_stations[impact_station] = \
+            self.__impact_station(advanced_stations[impact_station])
 
-        impact_station = random.choice(state.ship.stations.keys())
-        state.ship.stations[impact_station] = \
-            self.__impact_station(state.ship.stations[impact_station])
+        qp_results += self.result_engine.record_station_advance_result(
+            start_stations, advanced_stations, final_stations, state.ship.crew)
 
         # apply result of combat to stats
-
         current_stats[STATS.HULL_HEALTH] -= damage_player
         opponent.stats[STATS.HULL_HEALTH] -= damage_opponent
+        qp_results += self.result_engine.record_combat_result(
+            damage_player, damage_opponent)
+        qp_results += self.result_engine.record_stat_threshold(
+            starting_stats, current_stats,
+            starting_opponent_stats, opponent.stats)
 
         # Store only the persistent stats. All opponent stats are persistent.
         state.ship.stats = self.__collect_persistent_stats(current_stats)
+        state.ship.stations = final_stations
+        state.stage.opponent = opponent
 
         # return
 
-        return state
+        return (state, qp_results)
 
     def __get_manned_stations(self, crew):
         return set([

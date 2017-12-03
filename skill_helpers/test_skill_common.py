@@ -63,3 +63,15 @@ class SkillCommonTests(TestCase):
         self.assertIn(test_resp2, resp["outputSpeech"]["text"])
         self.assertFalse(resp["outputSpeech"]["text"].startswith("<speak>"))
         self.assertFalse(resp["outputSpeech"]["text"].endswith("</speak>"))
+
+    def test_handle_text_list_should_handle_list(self):
+        self.assertEqual("1, 2, and 3", handle_text_list(["1", "2", "3"]))
+
+    def test_handle_text_list_should_handle_list_2(self):
+        self.assertEqual("1 and 2", handle_text_list(["1", "2"]))
+
+    def test_handle_text_list_should_handle_list_1(self):
+        self.assertEqual("1", handle_text_list(["1"]))
+
+    def test_handle_text_list_should_handle_list_0(self):
+        self.assertEqual("", handle_text_list([]))

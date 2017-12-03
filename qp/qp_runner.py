@@ -54,11 +54,11 @@ class QPRunner(object):
         Report end games.
         """
         # TODO is this the dict or the object game state?
-        new_state = self.engine.advance(game_state)
+        (new_state, qp_results) = self.engine.advance(game_state)
 
         end_game = self.engine.check_for_endgame_states(new_state)
 
-        return (new_state, end_game)
+        return (new_state, end_game, qp_results)
 
     def instruct_crew(self, game_state, crew, station):
         """Command a crew member to a station.

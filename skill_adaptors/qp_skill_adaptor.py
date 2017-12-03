@@ -67,7 +67,8 @@ class QPSkillAdaptor(object):
             STATS.ATTACK_POWER: 5,
             STATS.DODGE: 2,
             STATS.SHIELD: 0,
-            STATS.ACCURACY: 4
+            STATS.ACCURACY: 4,
+            STATS.MAX_HULL_HEALTH: 50
         })
         # Set the stage
         game_state.stage = new_stage
@@ -114,7 +115,8 @@ class QPSkillAdaptor(object):
             return (response, game_state)
 
     def __handle_combat(self, slots, game_state):
-        (game_state, end_game) = self.__runner.advance_combat(game_state)
+        (game_state, end_game, qp_results) = \
+            self.__runner.advance_combat(game_state)
 
         stats = game_state.ship.stats
 

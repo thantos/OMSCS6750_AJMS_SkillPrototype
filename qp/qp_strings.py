@@ -1,5 +1,6 @@
 """QP Common Strings Module."""
-from skill_helpers import PlainResponse, SSMLResponse, SimpleCard
+from skill_helpers import PlainResponse, SSMLResponse, SimpleCard, \
+    handle_text_list
 from stations import STATIONS
 from .qp_constants import END_GAME_STATES
 
@@ -18,7 +19,8 @@ class QPContent(object):
     """
 
     NEW_GAME_INTRO = \
-        "Welcome to Quick Particle, no Ship found, generating one."
+        "Captain, are you ok? I think we are stranded, " \
+        + "the warp drive needs a new core, which we don't have."
     NEW_GAME_CARD_TITLE = "Quick Particle Ship Acquisition"
     MOVE_SUGGESTION_TEXT = \
         "You can assign your crew to stations by saying move " \
@@ -27,16 +29,16 @@ class QPContent(object):
 
     @staticmethod
     def list_crew(crew_names):
-        return "Your crew is " + (", ".join(crew_names)) + "."
+        return "Our small crew is " + handle_text_list(crew_names) + "."
 
     @staticmethod
     def list_stations(station_names):
-        return "The stations you have installed are " + \
-            ", ".join(station_names) + "."
+        return "Our functioning stations are " + \
+            handle_text_list(station_names) + "."
 
     @staticmethod
     def describe_stage(opponent_name):
-        return "Captain, there is an enemy ship called " + \
+        return "There is an enemy ship called " + \
             opponent_name + ". It has begun firing on us." + \
             " We need to get our crew into position."
 
@@ -46,9 +48,11 @@ class QPContent(object):
         return PlainResponse(
             " ".join([
              QPContent.NEW_GAME_INTRO,
+             "To make things worse ",
+             QPContent.describe_stage(opponent_name),
+             "As a remminder, ",
              QPContent.list_crew(crew_members),
              QPContent.list_stations(stations),
-             QPContent.describe_stage(opponent_name),
              QPContent.MOVE_SUGGESTION_TEXT]))
 
     """

@@ -18,7 +18,8 @@ class QPSimulator(object):
             STATS.ATTACK_POWER: 5,
             STATS.DODGE: 2,
             STATS.SHIELD: 0,
-            STATS.ACCURACY: 4
+            STATS.ACCURACY: 4,
+            STATS.MAX_HULL_HEALTH: 50
         })
 
         game_state.ship.stats = \
@@ -38,10 +39,11 @@ class QPSimulator(object):
             reassign_stations = [s for s in crew_stations
                                  if s not in current_stations]
             for i in range(max(len(reassign_crew), len(reassign_stations))):
-                game_state = self.runner.instruct_crew(
+                (game_state, s, c) = self.runner.instruct_crew(
                     game_state, reassign_crew[i], reassign_stations[i])
             round += 1
-            (game_state, end_game) = self.runner.advance_combat(game_state)
+            (game_state, end_game, qp_results) = \
+                self.runner.advance_combat(game_state)
 
         return (round, game_state, end_game)
 
