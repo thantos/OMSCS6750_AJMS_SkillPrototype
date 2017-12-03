@@ -2,14 +2,19 @@
 from skill_helpers import PlainResponse, SSMLResponse, SimpleCard, \
     handle_text_list
 from stations import STATIONS
-from .qp_constants import END_GAME_STATES
+from .qp_constants import END_GAME_STATES, CREW_MEMBERS
+from .qp_combat_results import AttackMissed, AttackHit, StationStateActor, \
+    StationDamageStateChange, StationFireStateChange, ResultThresholds, \
+    HealthThresholdBreached, LifeSupportThresholdBreached
 
 
 class QPContent(object):
     """Common Strings and Text output functions."""
 
     QUICK_PARTICLE_STRING = "Quick Particle"
-    DEFAULT_OUTPUT = "Welcome to quick particle. Content coming soon."
+    DEFAULT_OUTPUT = "Captain, I am not sure what you meant by that. " +\
+        "Try asking the crew to move to stations " + \
+        "or say engage to continue the battle."
     DEFAULT_RESPONSE = \
         PlainResponse(DEFAULT_OUTPUT)
     DEFAULT_CARD = SimpleCard(QUICK_PARTICLE_STRING, DEFAULT_OUTPUT)
@@ -20,12 +25,12 @@ class QPContent(object):
 
     NEW_GAME_INTRO = \
         "Captain, are you ok? I think we are stranded, " \
-        + "the warp drive needs a new core, which we don't have."
+        + "the warp drive needs a new core."
     NEW_GAME_CARD_TITLE = "Quick Particle Ship Acquisition"
     MOVE_SUGGESTION_TEXT = \
         "You can assign your crew to stations by saying move " \
-        + "crew name to station name. Say GO once you are ready " \
-        + "to engage the enemy ship."
+        + "crew name to station name. Say engage once you are ready " \
+        + "to fight the enemy ship."
 
     @staticmethod
     def list_crew(crew_names):
@@ -147,3 +152,131 @@ class QPContent(object):
             return "The enemy ship bursts apart, the crew lets out a " + \
                 "sigh of relief, then a cheer. On to the next challenge."
         return None
+
+    """QP Results"""
+
+    @staticmethod
+    def handle_qp_results_respone(qp_results):
+        return [resp for resp in
+                [QPContent.handle_qp_result(r)
+                 for r in qp_results] if resp is not None]
+
+    @staticmethod
+    def handle_qp_result(result):
+        if isinstance(result, AttackMissed):
+            return QPContent.__handle_attack_miss(result)
+        elif isinstance(result, AttackHit):
+            return QPContent.__handle_attack_hit(result)
+        elif isinstance(result, StationDamageStateChange):
+            return QPContent.__handle_station_damage_state_change(result)
+        elif isinstance(result, StationFireStateChange):
+            return QPContent.__handle_station_fire_state_change(result)
+        elif isinstance(result, HealthThresholdBreached):
+            return QPContent.__handle_health_threshold_breach(result)
+        elif isinstance(result, LifeSupportThresholdBreached):
+            return QPContent.__handle_life_support_threshold_breach(result)
+
+    @staticmethod
+    def __handle_attack_miss(attack_miss):
+        if attack_miss.player:
+            return SSMLResponse(
+                "<say-as interpret-as=\"interjection\">bah!</say-as> " +
+                "we missed their ship.")
+        else:
+            return SSMLResponse(
+                "<say-as interpret-as=\"interjection\">hooray</say-as> " +
+                "they missed us.")
+
+    @staticmethod
+    def __handle_attack_hit(attack_hit):
+        # TODO base result on damage done
+        if attack_hit.player:
+            return SSMLResponse(
+                "<say-as interpret-as=\"interjection\">bam!</say-as> " +
+                "we hit them!")
+        else:
+            return SSMLResponse(
+                "<say-as interpret-as=\"interjection\">wham!</say-as> " +
+                "they hit us captain.")
+
+    @staticmethod
+    def __handle_station_damage_state_change(station_damage):
+        station_name = STATIONS.get(station_damage.station).name
+        if station_damage.repaired_by is not None:
+            crew_name = CREW_MEMBERS.get(station_damage.repaired_by)["name"]
+            if station_damage.damaged_by is not None:
+                return PlainResponse(
+                    crew_name + " is repairing the " + station_name +
+                    ", but it was futher damaged by enemy fire.")
+            else:
+                return PlainResponse(
+                    crew_name + " has repaired the " + station_name)
+        elif station_damage.damaged_by == StationStateActor.ATTACK:
+            return PlainResponse(
+                "The " + station_name + " has been damaged by enemy fire.")
+        elif station_damage.damaged_by == StationStateActor.FIRE:
+            return PlainResponse(
+                "The fire in the " + station_name + " has damaged it.")
+
+    @staticmethod
+    def __handle_station_fire_state_change(station_fire):
+        station_name = STATIONS.get(station_fire.station).name
+        if station_fire.extinguished_by is not None:
+            crew_name = CREW_MEMBERS.get(station_fire.repaired_by)["name"]
+            if station_fire.start_by is not None:
+                return PlainResponse(
+                    "Enemy fire expanded the fire " + crew_name +
+                    " put out in the " + station_name)
+            else:
+                return PlainResponse(
+                    crew_name + " has extinguished the fire in the " +
+                    station_name)
+        elif station_fire.start_by == StationStateActor.ATTACK:
+            return PlainResponse(
+                "The " + station_name + " has started on fire.")
+
+    @staticmethod
+    def __handle_health_threshold_breach(health_breach):
+        if not health_breach.up:
+            if health_breach.player:
+                if health_breach.threshold == ResultThresholds["HIGH"]:
+                    return PlainResponse("The hull is holding, captain.")
+                elif health_breach.threshold == ResultThresholds["MID"]:
+                    return PlainResponse("The hull is weakening, captain.")
+            elif health_breach.threshold == ResultThresholds["LOW"]:
+                    return PlainResponse(
+                        "The hull is critically damaged, captain.")
+            else:
+                if health_breach.threshold == ResultThresholds["HIGH"]:
+                    return PlainResponse(
+                        "The enemy hull is withstnding our impacts, captain.")
+                elif health_breach.threshold == ResultThresholds["MID"]:
+                    return PlainResponse(
+                        "The enemy hull is showing weakness, captain.")
+                elif health_breach.threshold == ResultThresholds["LOW"]:
+                    return PlainResponse(
+                        "The enemy is critically damaged, let's finish them!")
+        else:
+            pass  # TODO handle up phrases
+
+    @staticmethod
+    def __handle_life_support_threshold_breach(ls_breach):
+        if not ls_breach.up:
+            if ls_breach.threshold == ResultThresholds["HIGH"]:
+                return PlainResponse("We are losing life support charge!")
+            elif ls_breach.threshold == ResultThresholds["MID"]:
+                return PlainResponse(
+                    "Life Support state continues to worsen, " +
+                    "consider repairing the Life Support station.")
+            elif ls_breach.threshold == ResultThresholds["LOW"]:
+                return PlainResponse(
+                    "Life support is critical, " +
+                    "repair or we will die, captain!")
+        else:
+            if ls_breach.threshold == ResultThresholds["FULL"]:
+                return PlainResponse("Life support is full restored.")
+            elif ls_breach.threshold == ResultThresholds["HIGH"]:
+                return PlainResponse("Life Support is improving.")
+            elif ls_breach.threshold == ResultThresholds["MID"]:
+                return PlainResponse(
+                    "Life Support out of a critical state.")

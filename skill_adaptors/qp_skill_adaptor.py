@@ -3,7 +3,7 @@ from skill_helpers import build_response, \
     build_speechlet_response_enahnced, PlainResponse
 from qp import QPRunner, CREW_MEMBERS, \
     CrewMemberInvalidException, StationInvalidException, QPContent, STATS, \
-    BASE_STATS, CONSTANTS, STARTING_STATIONS
+    BASE_STATS, CONSTANTS, STARTING_STATIONS, MemberAlreadyInStationException
 from qp.stations import STATIONS
 
 
@@ -21,7 +21,7 @@ class QPSkillAdaptor(object):
         new_game_state = game_state
         response = build_speechlet_response_enahnced(
                 QPContent.DEFAULT_RESPONSE,
-                card=QPContent.DEFAULT_CARD, should_end_session=True)
+                card=QPContent.DEFAULT_CARD, should_end_session=False)
         intent_name = intent_data.get("name")
         end_game = None
 
@@ -113,21 +113,20 @@ class QPSkillAdaptor(object):
                 QPContent.INSTRUCT_CREW_REPROMPT,
                 card=QPContent.INVALID_INSTRUCTION_CARD)
             return (response, game_state)
+        except MemberAlreadyInStationException, e:
+            response = build_speechlet_response_enahnced(
+                PlainResponse(str(e)),
+                QPContent.INSTRUCT_CREW_REPROMPT,
+                card=QPContent.INVALID_INSTRUCTION_CARD)
+            return (response, game_state)
 
     def __handle_combat(self, slots, game_state):
         (game_state, end_game, qp_results) = \
-            self.__runner.advance_combat(game_state)
-
-        stats = game_state.ship.stats
+                self.__runner.advance_combat(game_state)
 
         return (build_speechlet_response_enahnced(
-            QPContent.report_post_advance_state_response(
-                hull=stats.get(STATS.HULL_HEALTH),
-                ls=stats.get(STATS.LIFE_SUPPORT),
-                warp=stats.get(STATS.WARP),
-                ehull=game_state.stage.opponent.stats.get(STATS.HULL_HEALTH),
-                stations=game_state.ship.stations,
-                end_game=end_game), should_end_session=end_game is not None),
+            QPContent.handle_qp_results_respone(qp_results),
+            should_end_session=end_game is not None),
                 game_state, end_game)
 
     def __handle_crew_state(self, slots, game_state):
