@@ -98,11 +98,13 @@ class QPEngine(object):
         advanced_stations = \
             self.__advance_stations_state(start_stations, manned_stations)
 
-        # fire and damage to player station
-        impact_station = random.choice(advanced_stations.keys())
         final_stations = deepcopy(advanced_stations)
-        final_stations[impact_station] = \
-            self.__impact_station(advanced_stations[impact_station])
+
+        if damage_player > 0:
+            # fire and damage to player station
+            impact_station = random.choice(advanced_stations.keys())
+            final_stations[impact_station] = \
+                self.__impact_station(advanced_stations[impact_station])
 
         # apply result of combat to stats
         current_stats[STATS.HULL_HEALTH] -= damage_player
