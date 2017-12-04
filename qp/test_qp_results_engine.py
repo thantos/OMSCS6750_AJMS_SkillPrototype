@@ -4,10 +4,14 @@ from qp_result_engine import QPResultEngine
 from qp import STATS, HullDestroyed, LifeSupportDepleted
 from qp.state import StationState, CrewMemberState
 from .qp_combat_results import StationFireStateChange, \
-    StationStateActor, StationDamageStateChange
+    StationStateActor, StationDamageStateChange, HealthThresholdBreached, \
+    LifeSupportThresholdBreached
 
 
 class TestQPResultEngine(TestCase):
+
+    def setUp(self):
+        self.undertest = QPResultEngine()
 
     def test_calculate_threshold_should_find_upper_threshold(self):
         (up, result) = \
@@ -121,6 +125,94 @@ class TestQPResultEngine(TestCase):
         self.assertEquals("MID", results[0].threshold)
         self.assertEquals("LOW", results[2].threshold)
         self.assertEquals("HIGH", results[1].threshold)
+    def test_should_have_fire_extinguished(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=10)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationFireStateChange)
+        self.assertEqual(result[0].extinguished_by, "LESTER")
+
+    def test_should_have_fire_extinguished_and_started(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=10)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=1)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationFireStateChange)
+        self.assertEqual(result[0].extinguished_by, "LESTER")
+        self.assertEqual(result[0].start_by, StationStateActor.ATTACK)
+
+    def test_should_have_fire_started(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=1)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationFireStateChange)
+        self.assertIsNone(result[0].extinguished_by)
+        self.assertEqual(result[0].start_by, StationStateActor.ATTACK)
+
+    def test_should_have_damaged_by_attack(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(damaged=False)}, {
+                "AUTO_TURRET": StationState(damaged=False)}, {
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationDamageStateChange)
+        self.assertIsNone(result[0].repaired_by)
+        self.assertEqual(result[0].damaged_by, StationStateActor.ATTACK)
+
+    def test_should_have_damaged_by_fire(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=1, damaged=False)}, {
+                "AUTO_TURRET": StationState(fire=1, damaged=True)}, {
+                "AUTO_TURRET": StationState(fire=1, damaged=True)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationDamageStateChange)
+        self.assertIsNone(result[0].repaired_by)
+        self.assertEqual(result[0].damaged_by, StationStateActor.FIRE)
+
+    def test_should_have_repaired_by(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                "AUTO_TURRET": StationState()}, {
+                "AUTO_TURRET": StationState()}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationDamageStateChange)
+        self.assertEqual(result[0].repaired_by, "LESTER")
+        self.assertIsNone(result[0].damaged_by)
+
+    def test_should_have_no_state_change(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertEqual(0, len(result))
+
+    def test_should_have_threshold_change(self):
+        result = self.undertest.record_stat_threshold(
+            *self.__create_stats(100, 50, 100, 100, 20, 20, 100))
+
+        self.assertEqual(1, len(result))
+        self.assertIsInstance(result[0], HealthThresholdBreached)
+        self.assertEqual(result[0].threshold, "MID")
 
     def __create_stats(self, S_HH, E_HH, S_LS, E_LS, S_HH_O, E_HH_O, M):
         return (
@@ -216,84 +308,3 @@ class QPResultEngineEndGameTests(TestCase):
             self.player_stats, self.opponent_stats)
 
         self.assertIsInstance(result[0], HullDestroyed)
-
-    def test_should_have_fire_extinguished(self):
-        result = self.undertest.record_station_advance_result({
-                "AUTO_TURRET": StationState(fire=10)}, {
-                "AUTO_TURRET": StationState(fire=0)}, {
-                "AUTO_TURRET": StationState(fire=0)}, {
-                    "LESTER": CrewMemberState(station="AUTO_TURRET")
-                })
-
-        self.assertIsInstance(result[0], StationFireStateChange)
-        self.assertEqual(result[0].extinguished_by, "LESTER")
-
-    def test_should_have_fire_extinguished_and_started(self):
-        result = self.undertest.record_station_advance_result({
-                "AUTO_TURRET": StationState(fire=10)}, {
-                "AUTO_TURRET": StationState(fire=0)}, {
-                "AUTO_TURRET": StationState(fire=1)}, {
-                    "LESTER": CrewMemberState(station="AUTO_TURRET")
-                })
-
-        self.assertIsInstance(result[0], StationFireStateChange)
-        self.assertEqual(result[0].extinguished_by, "LESTER")
-        self.assertEqual(result[0].start_by, StationStateActor.ATTACK)
-
-    def test_should_have_fire_started(self):
-        result = self.undertest.record_station_advance_result({
-                "AUTO_TURRET": StationState(fire=0)}, {
-                "AUTO_TURRET": StationState(fire=0)}, {
-                "AUTO_TURRET": StationState(fire=1)}, {
-                    "LESTER": CrewMemberState(station="AUTO_TURRET")
-                })
-
-        self.assertIsInstance(result[0], StationFireStateChange)
-        self.assertIsNone(result[0].extinguished_by)
-        self.assertEqual(result[0].start_by, StationStateActor.ATTACK)
-
-    def test_should_have_damaged_by_attack(self):
-        result = self.undertest.record_station_advance_result({
-                "AUTO_TURRET": StationState(damaged=False)}, {
-                "AUTO_TURRET": StationState(damaged=False)}, {
-                "AUTO_TURRET": StationState(damaged=True)}, {
-                    "LESTER": CrewMemberState(station="AUTO_TURRET")
-                })
-
-        self.assertIsInstance(result[0], StationDamageStateChange)
-        self.assertIsNone(result[0].repaired_by)
-        self.assertEqual(result[0].damaged_by, StationStateActor.ATTACK)
-
-    def test_should_have_damaged_by_fire(self):
-        result = self.undertest.record_station_advance_result({
-                "AUTO_TURRET": StationState(fire=1, damaged=False)}, {
-                "AUTO_TURRET": StationState(fire=1, damaged=True)}, {
-                "AUTO_TURRET": StationState(fire=1, damaged=True)}, {
-                    "LESTER": CrewMemberState(station="AUTO_TURRET")
-                })
-
-        self.assertIsInstance(result[0], StationDamageStateChange)
-        self.assertIsNone(result[0].repaired_by)
-        self.assertEqual(result[0].damaged_by, StationStateActor.FIRE)
-
-    def test_should_have_repaired_by(self):
-        result = self.undertest.record_station_advance_result({
-                "AUTO_TURRET": StationState(damaged=True)}, {
-                "AUTO_TURRET": StationState()}, {
-                "AUTO_TURRET": StationState()}, {
-                    "LESTER": CrewMemberState(station="AUTO_TURRET")
-                })
-
-        self.assertIsInstance(result[0], StationDamageStateChange)
-        self.assertEqual(result[0].repaired_by, "LESTER")
-        self.assertIsNone(result[0].damaged_by)
-
-    def test_should_have_no_state_change(self):
-        result = self.undertest.record_station_advance_result({
-                "AUTO_TURRET": StationState(damaged=True)}, {
-                "AUTO_TURRET": StationState(damaged=True)}, {
-                "AUTO_TURRET": StationState(damaged=True)}, {
-                    "LESTER": CrewMemberState(station="AUTO_TURRET")
-                })
-
-        self.assertEqual(0, len(result))

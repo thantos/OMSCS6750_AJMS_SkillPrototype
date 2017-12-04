@@ -52,7 +52,7 @@ class QPContent(object):
         # TODO Note, this is temporarily specific
         return "Luckily, There is an enemy ship called " + \
             opponent_name + \
-            ". off the port. It has begun firing on us."
+            " off the port. It has begun firing on us."
 
     # TODO separate new game, stage, and instructions
     @staticmethod
@@ -273,22 +273,22 @@ class QPContent(object):
     @staticmethod
     def __handle_life_support_threshold_breach(ls_breach):
         if not ls_breach.up:
-            if ls_breach.threshold == ResultThresholds["HIGH"]:
+            if ls_breach.threshold == "HIGH":
                 return PlainResponse("We are losing life support charge!")
-            elif ls_breach.threshold == ResultThresholds["MID"]:
+            elif ls_breach.threshold == "MID":
                 return PlainResponse(
                     "Life Support state continues to worsen, " +
                     "consider repairing the Life Support station.")
-            elif ls_breach.threshold == ResultThresholds["LOW"]:
+            elif ls_breach.threshold == "LOW":
                 return PlainResponse(
                     "Life support is critical, " +
                     "repair or we will die, captain!")
         else:
-            if ls_breach.threshold == ResultThresholds["FULL"]:
+            if ls_breach.threshold == "FULL":
                 return PlainResponse("Life support is full restored.")
-            elif ls_breach.threshold == ResultThresholds["HIGH"]:
+            elif ls_breach.threshold == "HIGH":
                 return PlainResponse("Life Support is improving.")
-            elif ls_breach.threshold == ResultThresholds["MID"]:
+            elif ls_breach.threshold == "MID":
                 return PlainResponse(
                     "Life Support out of a critical state.")
 
