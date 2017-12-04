@@ -74,3 +74,22 @@ class LifeSupportThresholdBreached(QPResult):
     def __init__(self, up=False, threshold=None):
         self.up = up
         self.threshold = threshold
+
+
+""" End Game """
+
+
+class EndGameState(object):
+    pass
+
+
+class HullDestroyed(EndGameState):
+    """Object representing a end game senerio."""
+
+    def __init__(self, player):
+        """Build end game state."""
+        self.player = player
+
+
+class LifeSupportDepleted(EndGameState):
+    pass

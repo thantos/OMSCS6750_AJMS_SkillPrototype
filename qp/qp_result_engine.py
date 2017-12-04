@@ -2,7 +2,8 @@
 from .qp_constants import STATS
 from .qp_combat_results import AttackHit, AttackMissed, \
     StationDamageStateChange, StationFireStateChange, StationStateActor, \
-    ResultThresholds, HealthThresholdBreached, LifeSupportThresholdBreached
+    ResultThresholds, HealthThresholdBreached, LifeSupportThresholdBreached, \
+    HullDestroyed, LifeSupportDepleted
 
 
 class QPResultEngine(object):
@@ -56,7 +57,8 @@ class QPResultEngine(object):
             # Fire was extinguished if the state changed
             # and fire is 0 before combat
             # Note: fire may be both exstinguished and started the same round
-            extinguished_by = cm if advance_state.fire == 0 else None
+            extinguished_by = cm \
+                if start_state.fire > 0 and advance_state.fire == 0 else None
             results += [StationFireStateChange(
                 id, start_by=started_by, extinguished_by=extinguished_by)]
         if QPResultEngine.__damaged_state_change(start_state,
@@ -74,7 +76,7 @@ class QPResultEngine(object):
     @staticmethod
     def __fire_state_change(start, adv, final):
         """Define fire change as 0 to non 0 or vise versa."""
-        return start.fire > 0 != adv.fire > 0 or adv.fire > 0 != final.fire > 0
+        return ((start.fire > 0) != (adv.fire > 0)) or ((adv.fire > 0) != (final.fire > 0))
 
     @staticmethod
     def __damaged_state_change(start, adv, final):
@@ -90,7 +92,7 @@ class QPResultEngine(object):
 
     @staticmethod
     def __find_crew_in_station(station_id, crew_members):
-        r = [c for (c, s) in crew_members.iteritems() if s.station == id]
+        r = [c for (c, s) in crew_members.iteritems() if s.station == station_id]
         if len(r) > 0:
             return r[0]
         return None
@@ -166,3 +168,15 @@ class QPResultEngine(object):
             if (up and v <= percent) or (not up and v >= percent):
                 return k
         return None
+
+    """ End Game """
+
+    def record_end_game(self, player_stats, opponent_stats):
+        record = []
+        if player_stats.get(STATS.HULL_HEALTH) <= 0:
+            record += [HullDestroyed(player=True)]
+        if player_stats.get(STATS.LIFE_SUPPORT) <= 0:
+            record += [LifeSupportDepleted()]
+        if opponent_stats.get(STATS.HULL_HEALTH) <= 0:
+            record += [HullDestroyed(player=False)]
+        return record

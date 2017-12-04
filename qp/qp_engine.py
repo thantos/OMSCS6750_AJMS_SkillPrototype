@@ -4,7 +4,7 @@ from .qp_exceptions import CrewMemberInvalidException, \
     StationInvalidException, MemberAlreadyInStationException
 from copy import deepcopy
 from stations import STATIONS
-from .qp_constants import STATS, STAT_CONSTANTS, END_GAME_STATES, BASE_STATS
+from .qp_constants import STATS, STAT_CONSTANTS, BASE_STATS
 import random
 from .qp_result_engine import QPResultEngine
 
@@ -104,14 +104,13 @@ class QPEngine(object):
         final_stations[impact_station] = \
             self.__impact_station(advanced_stations[impact_station])
 
-        qp_results += self.result_engine.record_station_advance_result(
-            start_stations, advanced_stations, final_stations, state.ship.crew)
-
         # apply result of combat to stats
         current_stats[STATS.HULL_HEALTH] -= damage_player
         opponent.stats[STATS.HULL_HEALTH] -= damage_opponent
         qp_results += self.result_engine.record_combat_result(
             damage_player, damage_opponent)
+        qp_results += self.result_engine.record_station_advance_result(
+            start_stations, advanced_stations, final_stations, state.ship.crew)
         qp_results += self.result_engine.record_stat_threshold(
             starting_stats, current_stats,
             starting_opponent_stats, opponent.stats)
@@ -225,19 +224,3 @@ class QPEngine(object):
         return {
                 s: v for (s, v) in stats.iteritems()
                 if s in (STATS.HULL_HEALTH, STATS.LIFE_SUPPORT, STATS.WARP)}
-
-    def check_for_endgame_states(self, game_state):
-        """Evaluate the game state for end game scenerios."""
-        if type(game_state) is not QPGameState:
-            raise ValueError("game_state must be a QPGameState Instance")
-
-        player_stats = game_state.ship.stats
-        opponent_stats = game_state.stage.opponent.stats
-
-        if player_stats.get(STATS.HULL_HEALTH) <= 0:
-            return END_GAME_STATES.PLAYER_HULL_DESTROYED
-        if player_stats.get(STATS.LIFE_SUPPORT) <= 0:
-            return END_GAME_STATES.PLAYER_LIFE_SUPPORT_LOSS
-        if opponent_stats.get(STATS.HULL_HEALTH) <= 0:
-            return END_GAME_STATES.OPPONENT_HULL_DESTROYED
-        return None

@@ -1,5 +1,6 @@
 """QP Runner Module."""
 from qp import QPEngine, STATS, CREW_MEMBERS
+from .qp_result_engine import QPResultEngine
 from state import QPGameState, Ship, StationState, StageState, \
     CrewMemberState, EnemyState, GameStateLoader
 from stations import STATIONS
@@ -56,9 +57,10 @@ class QPRunner(object):
         # TODO is this the dict or the object game state?
         (new_state, qp_results) = self.engine.advance(game_state)
 
-        end_game = self.engine.check_for_endgame_states(new_state)
+        qp_results += QPResultEngine().record_end_game(
+            new_state.ship.stats, new_state.stage.opponent.stats)
 
-        return (new_state, end_game, qp_results)
+        return (new_state, qp_results)
 
     def instruct_crew(self, game_state, crew, station):
         """Command a crew member to a station.
@@ -78,7 +80,7 @@ class QPRunner(object):
         if hasattr(obj, '__dict__'):
             return self.to_json_friendly(obj.__dict__)
         elif isinstance(obj, list):
-            return [self.to_json_friendly(x) for x in list]
+            return [self.to_json_friendly(x) for x in obj]
         elif isinstance(obj, dict):
             return {k: self.to_json_friendly(v) for (k, v) in obj.iteritems()}
         else:

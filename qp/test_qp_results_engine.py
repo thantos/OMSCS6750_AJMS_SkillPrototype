@@ -1,6 +1,10 @@
+""""""
 from unittest import TestCase
 from qp_result_engine import QPResultEngine
-from qp import STATS
+from qp import STATS, HullDestroyed, LifeSupportDepleted
+from qp.state import StationState, CrewMemberState
+from .qp_combat_results import StationFireStateChange, \
+    StationStateActor, StationDamageStateChange
 
 
 class TestQPResultEngine(TestCase):
@@ -141,3 +145,155 @@ class TestQPResultEngine(TestCase):
                 STATS.MAX_HULL_HEALTH: M
             }
         )
+
+
+class QPResultEngineEndGameTests(TestCase):
+    """"""
+    test_game_state = None
+
+    def setUp(self):
+        self.undertest = QPResultEngine()
+        self.player_stats = {
+                STATS.HULL_HEALTH: 10,
+                STATS.LIFE_SUPPORT: 10
+            }
+        self.opponent_stats = {
+                STATS.HULL_HEALTH: 10
+            }
+
+    def test_should_have_no_end_game(self):
+        result = self.undertest.record_end_game(
+            self.player_stats, self.opponent_stats)
+
+        self.assertEqual(0, len(result))
+
+    def test_should_have_player_hull_end_game_when_hull_0(self):
+        self.player_stats[STATS.HULL_HEALTH] = 0
+
+        result = self.undertest.record_end_game(
+            self.player_stats, self.opponent_stats)
+
+        self.assertIsInstance(result[0], HullDestroyed)
+        self.assertTrue(result[0].player)
+
+    def test_should_have_player_hull_end_game_when_hull_less_than_0(self):
+        self.player_stats[STATS.HULL_HEALTH] = -10
+
+        result = self.undertest.record_end_game(
+            self.player_stats, self.opponent_stats)
+
+        self.assertIsInstance(result[0], HullDestroyed)
+
+    def test_should_have_life_support_end_game_when_ls_0(self):
+        self.player_stats[STATS.LIFE_SUPPORT] = 0
+
+        result = self.undertest.record_end_game(
+            self.player_stats, self.opponent_stats)
+
+        self.assertIsInstance(result[0], LifeSupportDepleted)
+
+    def test_should_have_life_support_end_game_when_ls_less_than_0(self):
+        self.player_stats[STATS.LIFE_SUPPORT] = -10
+
+        result = self.undertest.record_end_game(
+            self.player_stats, self.opponent_stats)
+
+        self.assertIsInstance(result[0], LifeSupportDepleted)
+
+    def test_should_have_opponent_hull_end_game_when_hull_0(self):
+        self.opponent_stats[STATS.HULL_HEALTH] = 0
+
+        result = self.undertest.record_end_game(
+            self.player_stats, self.opponent_stats)
+
+        self.assertIsInstance(result[0], HullDestroyed)
+        self.assertFalse(result[0].player)
+
+    def test_should_have_opponent_hull_end_game_when_hull_less_than_0(self):
+        self.opponent_stats[STATS.HULL_HEALTH] = -10
+
+        result = self.undertest.record_end_game(
+            self.player_stats, self.opponent_stats)
+
+        self.assertIsInstance(result[0], HullDestroyed)
+
+    def test_should_have_fire_extinguished(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=10)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationFireStateChange)
+        self.assertEqual(result[0].extinguished_by, "LESTER")
+
+    def test_should_have_fire_extinguished_and_started(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=10)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=1)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationFireStateChange)
+        self.assertEqual(result[0].extinguished_by, "LESTER")
+        self.assertEqual(result[0].start_by, StationStateActor.ATTACK)
+
+    def test_should_have_fire_started(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=0)}, {
+                "AUTO_TURRET": StationState(fire=1)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationFireStateChange)
+        self.assertIsNone(result[0].extinguished_by)
+        self.assertEqual(result[0].start_by, StationStateActor.ATTACK)
+
+    def test_should_have_damaged_by_attack(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(damaged=False)}, {
+                "AUTO_TURRET": StationState(damaged=False)}, {
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationDamageStateChange)
+        self.assertIsNone(result[0].repaired_by)
+        self.assertEqual(result[0].damaged_by, StationStateActor.ATTACK)
+
+    def test_should_have_damaged_by_fire(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(fire=1, damaged=False)}, {
+                "AUTO_TURRET": StationState(fire=1, damaged=True)}, {
+                "AUTO_TURRET": StationState(fire=1, damaged=True)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationDamageStateChange)
+        self.assertIsNone(result[0].repaired_by)
+        self.assertEqual(result[0].damaged_by, StationStateActor.FIRE)
+
+    def test_should_have_repaired_by(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                "AUTO_TURRET": StationState()}, {
+                "AUTO_TURRET": StationState()}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertIsInstance(result[0], StationDamageStateChange)
+        self.assertEqual(result[0].repaired_by, "LESTER")
+        self.assertIsNone(result[0].damaged_by)
+
+    def test_should_have_no_state_change(self):
+        result = self.undertest.record_station_advance_result({
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                "AUTO_TURRET": StationState(damaged=True)}, {
+                    "LESTER": CrewMemberState(station="AUTO_TURRET")
+                })
+
+        self.assertEqual(0, len(result))

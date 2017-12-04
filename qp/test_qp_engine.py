@@ -1,6 +1,6 @@
 """Test for the Quick Particle Game Engine."""
 from unittest import TestCase
-from qp import QPEngine, STATS, END_GAME_STATES
+from qp import QPEngine, STATS
 from state import StationState, QPGameState, Ship, CrewMemberState, \
                     StageState, EnemyState
 from .qp_exceptions import StationInvalidException, CrewMemberInvalidException
@@ -253,70 +253,6 @@ class QPEngineAdvanceGeneralTests(TestCase):
         }, results)
 
 
-class QPEngineEndGameTests(TestCase):
-    """"""
-    test_game_state = None
-
-    def setUp(self):
-        self.undertest = QPEngine()
-        self.test_game_state = QPGameState(
-            Ship({}, {}, {
-                STATS.HULL_HEALTH: 10,
-                STATS.LIFE_SUPPORT: 10
-            }),
-            StageState(EnemyState("", {
-                STATS.HULL_HEALTH: 10
-            }))
-        )
-
-    def test_should_have_no_end_game(self):
-        result = self.undertest.check_for_endgame_states(self.test_game_state)
-
-        self.assertIsNone(result)
-
-    def test_should_have_player_hull_end_game_when_hull_0(self):
-        self.test_game_state.ship.stats[STATS.HULL_HEALTH] = 0
-
-        result = self.undertest.check_for_endgame_states(self.test_game_state)
-
-        self.assertEquals(result, END_GAME_STATES.PLAYER_HULL_DESTROYED)
-
-    def test_should_have_player_hull_end_game_when_hull_less_than_0(self):
-        self.test_game_state.ship.stats[STATS.HULL_HEALTH] = -10
-
-        result = self.undertest.check_for_endgame_states(self.test_game_state)
-
-        self.assertEquals(result, END_GAME_STATES.PLAYER_HULL_DESTROYED)
-
-    def test_should_have_life_support_end_game_when_ls_0(self):
-        self.test_game_state.ship.stats[STATS.LIFE_SUPPORT] = 0
-
-        result = self.undertest.check_for_endgame_states(self.test_game_state)
-
-        self.assertEquals(result, END_GAME_STATES.PLAYER_LIFE_SUPPORT_LOSS)
-
-    def test_should_have_life_support_end_game_when_ls_less_than_0(self):
-        self.test_game_state.ship.stats[STATS.LIFE_SUPPORT] = -10
-
-        result = self.undertest.check_for_endgame_states(self.test_game_state)
-
-        self.assertEquals(result, END_GAME_STATES.PLAYER_LIFE_SUPPORT_LOSS)
-
-    def test_should_have_opponent_hull_end_game_when_hull_0(self):
-        self.test_game_state.stage.opponent.stats[STATS.HULL_HEALTH] = 0
-
-        result = self.undertest.check_for_endgame_states(self.test_game_state)
-
-        self.assertEquals(result, END_GAME_STATES.OPPONENT_HULL_DESTROYED)
-
-    def test_should_have_opponent_hull_end_game_when_hull_less_than_0(self):
-        self.test_game_state.stage.opponent.stats[STATS.HULL_HEALTH] = -10
-
-        result = self.undertest.check_for_endgame_states(self.test_game_state)
-
-        self.assertEquals(result, END_GAME_STATES.OPPONENT_HULL_DESTROYED)
-
-
 class QPEngineCombatTests(TestCase):
     """"""
 
@@ -371,7 +307,7 @@ class QPEngineCombatTests(TestCase):
             self.assertEquals(result, 0)
 
     def test_attack_should_treat_missing_acc_as_0(self):
-        with mock.patch('random.randint', lambda s,e: 0):
+        with mock.patch('random.randint', lambda s, e: 0):
             att, dff = self.__build_stats()
             result = \
                 self.undertest._QPEngine__attack({

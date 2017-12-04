@@ -38,23 +38,6 @@ BASE_STATS = {
 STARTING_STATIONS = ["AUTO_TURRET", "COCKPIT", "LIFE_SUPPORT"]  # , "ENGINES"]
 
 
-class EndGameState(object):
-    """Object representing a end game senerio."""
-
-    def __init__(self, player_loss, name):
-        """Build end game state."""
-        self.player_loss = player_loss
-        self.name = name
-
-
-class END_GAME_STATES(object):
-    """Collection of possible ways to end combat."""
-
-    PLAYER_HULL_DESTROYED = EndGameState(True, "Player hull destroyed")
-    PLAYER_LIFE_SUPPORT_LOSS = EndGameState(True, "Player life support loss")
-    OPPONENT_HULL_DESTROYED = EndGameState(False, "Opponent hull destroyed")
-
-
 CREW_MEMBERS = {
     "AMY": {
         "name": "Amy",

@@ -2,10 +2,11 @@
 from skill_helpers import PlainResponse, SSMLResponse, SimpleCard, \
     handle_text_list
 from stations import STATIONS
-from .qp_constants import END_GAME_STATES, CREW_MEMBERS
+from .qp_constants import CREW_MEMBERS
 from .qp_combat_results import AttackMissed, AttackHit, StationStateActor, \
     StationDamageStateChange, StationFireStateChange, ResultThresholds, \
-    HealthThresholdBreached, LifeSupportThresholdBreached
+    HealthThresholdBreached, LifeSupportThresholdBreached, HullDestroyed, \
+    LifeSupportDepleted
 
 
 class QPContent(object):
@@ -24,9 +25,14 @@ class QPContent(object):
     """
 
     NEW_GAME_INTRO = \
-        "Captain, are you ok? I think we are stranded, " \
-        + "the warp drive needs a new core."
+        "Captain, are you ok? Our core is damaged, our " + \
+        "shields and warp drive are unusable. " + \
+        "We should find another ship to scrap a core from, then we " + \
+        "could get moving again."
     NEW_GAME_CARD_TITLE = "Quick Particle Ship Acquisition"
+    STATION_DESCRIPTION = "You can assign crew members to our stations. " + \
+        "Manned stations will operate more effectively. " + \
+        "A crew member can also repair damaged stations or put out fires."
     MOVE_SUGGESTION_TEXT = \
         "You can assign your crew to stations by saying move " \
         + "crew name to station name. Say engage once you are ready " \
@@ -43,9 +49,10 @@ class QPContent(object):
 
     @staticmethod
     def describe_stage(opponent_name):
-        return "There is an enemy ship called " + \
-            opponent_name + ". It has begun firing on us." + \
-            " We need to get our crew into position."
+        # TODO Note, this is temporarily specific
+        return "Luckily, There is an enemy ship called " + \
+            opponent_name + \
+            ". off the port. It has begun firing on us."
 
     # TODO separate new game, stage, and instructions
     @staticmethod
@@ -53,10 +60,10 @@ class QPContent(object):
         return PlainResponse(
             " ".join([
              QPContent.NEW_GAME_INTRO,
-             "To make things worse ",
              QPContent.describe_stage(opponent_name),
              "As a remminder, ",
              QPContent.list_crew(crew_members),
+             QPContent.STATION_DESCRIPTION,
              QPContent.list_stations(stations),
              QPContent.MOVE_SUGGESTION_TEXT]))
 
@@ -115,6 +122,19 @@ class QPContent(object):
     """
 
     @staticmethod
+    def unassigned_crew(unassigned_names, empty_stations):
+        multiple_c = len(unassigned_names) > 1
+        multiple_s = len(empty_stations) > 1
+        return PlainResponse(
+            handle_text_list(unassigned_names) +
+            " " + ("have" if multiple_c else "has") +
+            " not been assigned to a station." +
+            " I suggest you assign them before we engage." +
+            " You can say move crew member name to station name." +
+            " The empty stations " + ("are" if multiple_s else "is") +
+            " " + handle_text_list(empty_stations))
+
+    @staticmethod
     def report_post_advance_state_response(
      hull, ls, warp, ehull, stations, end_game):
         """Ship state, station state, and end_game states."""
@@ -140,19 +160,6 @@ class QPContent(object):
             return "Our " + station_name + " is damaged."
         return None
 
-    @staticmethod
-    def __report_end_game(end_game):
-        if end_game == END_GAME_STATES.PLAYER_HULL_DESTROYED:
-            return "The hull has been destroyed, all is lost."
-        if end_game == END_GAME_STATES.PLAYER_LIFE_SUPPORT_LOSS:
-            return "Life support reserves is empty. " + \
-                "The crew breaths its last breath " + \
-                "as cold overtakes the ship."
-        if end_game == END_GAME_STATES.OPPONENT_HULL_DESTROYED:
-            return "The enemy ship bursts apart, the crew lets out a " + \
-                "sigh of relief, then a cheer. On to the next challenge."
-        return None
-
     """QP Results"""
 
     @staticmethod
@@ -175,6 +182,10 @@ class QPContent(object):
             return QPContent.__handle_health_threshold_breach(result)
         elif isinstance(result, LifeSupportThresholdBreached):
             return QPContent.__handle_life_support_threshold_breach(result)
+        elif isinstance(result, LifeSupportDepleted):
+            return QPContent.__handle_life_support_depleted(result)
+        elif isinstance(result, HullDestroyed):
+            return QPContent.__handle_hull_destroyed(result)
 
     @staticmethod
     def __handle_attack_miss(attack_miss):
@@ -222,7 +233,7 @@ class QPContent(object):
     def __handle_station_fire_state_change(station_fire):
         station_name = STATIONS.get(station_fire.station).name
         if station_fire.extinguished_by is not None:
-            crew_name = CREW_MEMBERS.get(station_fire.repaired_by)["name"]
+            crew_name = CREW_MEMBERS.get(station_fire.extinguished_by)["name"]
             if station_fire.start_by is not None:
                 return PlainResponse(
                     "Enemy fire expanded the fire " + crew_name +
@@ -280,3 +291,19 @@ class QPContent(object):
             elif ls_breach.threshold == ResultThresholds["MID"]:
                 return PlainResponse(
                     "Life Support out of a critical state.")
+
+    @staticmethod
+    def __handle_hull_destroyed(hull_destroyed):
+        if hull_destroyed.player:
+            return PlainResponse("The hull has been destroyed, all is lost.")
+        else:
+            return PlainResponse(
+                "The enemy ship bursts apart, the crew lets out a " +
+                "sigh of relief, then a cheer. On to the next challenge.")
+
+    @staticmethod
+    def __handle_life_support_depleted(life_support_depleted):
+        return PlainResponse(
+                "Life support reserves is empty. " +
+                "The crew breaths its last breath " +
+                "as cold overtakes the ship.")
